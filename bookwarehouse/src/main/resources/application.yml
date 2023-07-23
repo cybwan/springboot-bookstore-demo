@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    default:
+      - "consul"
+      - "dev"
+  application:
+    name: bookwarehouse
+
+  cloud:
+    consul:
+      discovery:
+        instance-id: ${spring.application.name}:${random.value}
+        prefer-ip-address: true
+      config:
+        enabled: false
+
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+
+---
+# Dev Profile Configuration
+server:
+  port: 14001
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+# Prod Profile Configuration
+server:
+  port: 14001
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+

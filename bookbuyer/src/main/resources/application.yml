@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    default:
+      - "dev"
+      - "consul"
+  application:
+    name: bookbuyer
+
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+
+---
+# Dev Profile Configuration
+server:
+  port: 14003
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+# Prod Profile Configuration
+server:
+  port: 14001
+spring:
+  config:
+    activate:
+      on-profile: prod
+
