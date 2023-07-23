@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: bookstore
-          image: addozhang/bookstoreatest
+          image: addozhang/bookstore:latest
           ports:
             - containerPort: 14001
           env:

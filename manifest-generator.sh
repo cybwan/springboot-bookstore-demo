@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: $1
-          image: addozhang/$1:latest
+          image: addozhang/${1}:latest
           ports:
             - containerPort: 14001
           env:

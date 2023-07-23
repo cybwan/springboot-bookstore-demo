@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: bookthief
-          image: addozhang/bookthiefatest
+          image: addozhang/bookthief:latest
           ports:
             - containerPort: 14001
           env:

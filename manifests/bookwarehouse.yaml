@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: bookwarehouse
-          image: addozhang/bookwarehouseatest
+          image: addozhang/bookwarehouse:latest
           ports:
             - containerPort: 14001
           env:
