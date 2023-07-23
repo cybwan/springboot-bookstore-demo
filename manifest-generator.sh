@@ -3,6 +3,11 @@
 generate_yaml() {
 cat <<EOF
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: $1
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: $1
@@ -28,6 +33,7 @@ spec:
       labels:
         app: $1
     spec:
+      serviceAccountName: $1
       containers:
         - name: $1
           image: addozhang/${1}:latest
@@ -38,6 +44,18 @@ spec:
               value: 'consul,prod'
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 14001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 14001
+            initialDelaySeconds: 60
+            periodSeconds: 30
 EOF
 }
 
