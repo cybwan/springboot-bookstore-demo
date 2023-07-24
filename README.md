@@ -28,7 +28,9 @@ mvn spring-boot:run -f bookthief #port 14004
 
 All modules will run with profiles `dev` and `consul` by default. You can change it with `-Dspring.profiles.active=xxx` option.
 
-> `dev` profile will assign different port for each module. `consul` profile will register the service to Consul server.
+> - `dev` profile will assign different port for each module.
+> - `prod` profile will assign same port 14001 for each module. It suits for running in Kubernetes.
+> - `consul` profile will register the service to Consul server. Combining with `dev` profile, its address is `localhost:8500`. Combining with `prod` profile, its address is `consul.default:8500`.
 
 ### Build docker image
 
@@ -41,6 +43,8 @@ You can build docker image with the following command. Note, you should execute 
 The script will push images to Docker Hub automically if you set `DOCKER_USERNAME` and `DOCKER_PASSWORD` environment variables in advance.
 
 ### Run in Kubernetes
+
+Running in Kubernetes is very easy. You can run it with the following command: 
 
 ```bash
 kubectl create namespace bookstore
@@ -55,3 +59,5 @@ kubectl apply -n bookstore -f manifests/bookstore.yaml
 kubectl apply -n bookbuyer -f manifests/bookbuyer.yaml
 kubectl apply -n bookthief -f manifests/bookthief.yaml
 ```
+
+All applications will running in `prod` profile.
