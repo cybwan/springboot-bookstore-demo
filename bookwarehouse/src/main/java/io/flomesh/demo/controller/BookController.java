@@ -24,6 +24,7 @@ public class BookController {
 
     @PostMapping("/restockBooks/{id}/{quantity}")
     public ResponseEntity<Boolean> restockBooks(@PathVariable String id, @PathVariable int quantity) {
+        log.info("restockBooks() is called with id: " + id + ", quantity: " + quantity);
         bookService.restockBooks(id, quantity);
         return ResponseEntity.ok().body(true);
     }

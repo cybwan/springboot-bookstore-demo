@@ -6,14 +6,6 @@ spring:
   application:
     name: bookwarehouse
 
-  cloud:
-    consul:
-      discovery:
-        instance-id: ${spring.application.name}:${random.value}
-        prefer-ip-address: true
-      config:
-        enabled: false
-
 logging:
   level:
     org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
