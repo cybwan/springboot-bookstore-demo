@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class BookController {
     protected BookWarehouseClient client;
     @Getter
-    private AtomicInteger counter = new AtomicInteger(0);
+    private int counter = 0;
 
     protected abstract String getCounterName();
 
@@ -28,25 +28,29 @@ public abstract class BookController {
     @GetMapping("/reset")
     public ResponseEntity reset() {
         log.info("resetting booksSold to 0");
-        counter.getAndSet(0);
+        counter = 0;
         return ResponseEntity.ok().build();
     }
 
+    public void increaseCounter() {
+        counter++;
+    }
+
     public ResponseEntity<Integer> counting() {
-        return ResponseEntity.ok(counter.get());
+        return ResponseEntity.ok(counter);
     }
 
     @GetMapping("/raw")
     public ResponseEntity<Map<String, Integer>> raw() {
         HashMap<String, Integer> result = new HashMap<>();
-        result.put("counter", counter.get());
+        result.put("counter", counter);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/")
     public String page(Model model) {
         model.addAttribute("identity", identity);
-        model.addAttribute("counter", counter.get());
+        model.addAttribute("counter", counter);
         model.addAttribute("time", Instants.DEFAULT_DATE_FORMAT.format(new Date()));
         return "index";
     }

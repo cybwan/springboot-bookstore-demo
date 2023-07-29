@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: bookthief
   labels:
+    app: bookthief
     version: v1
 spec:
   replicas: 1

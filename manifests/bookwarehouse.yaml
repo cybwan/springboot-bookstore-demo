@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: bookwarehouse
   labels:
+    app: bookwarehouse
     version: v1
 spec:
   replicas: 1

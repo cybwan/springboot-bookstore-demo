@@ -25,7 +25,7 @@ public class StealBookTask {
     public void stealBook(){
         try {
             if (client.sellBook()) {
-                controller.getCounter().incrementAndGet();
+                controller.increaseCounter();
                 log.info("A book is stolen");
             }
         } catch (Exception e) {

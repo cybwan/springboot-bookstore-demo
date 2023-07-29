@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: bookstore
   labels:
+    app: bookstore
     version: v1
 spec:
   replicas: 1

@@ -26,7 +26,7 @@ public class BuyBookTask {
     public void buyABook(){
         try {
             if (client.sellBook()) {
-                controller.getCounter().incrementAndGet();
+                controller.increaseCounter();
                 log.info("A book is bought");
             }
         } catch (Exception e) {

@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: bookbuyer
   labels:
+    app: bookbuyer
     version: v1
 spec:
   replicas: 1

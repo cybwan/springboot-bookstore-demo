@@ -32,7 +32,7 @@ public class BookstoreController extends BookController {
     public ResponseEntity sellBook() {
         log.info("sellBook() is called");
         if (client.restockBooks(Instants.DEFAULT_ID, 1)) {
-            getCounter().incrementAndGet();
+            increaseCounter();
             return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.ok(false);
