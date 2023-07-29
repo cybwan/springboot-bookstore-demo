@@ -1,22 +1,3 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: bookbuyer
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bookbuyer
-  labels:
-    version: v1
-spec:
-  selector:
-    app: bookbuyer
-    version: v1
-  ports:
-    - protocol: TCP
-      port: 14001
-      targetPort: 14001
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -35,8 +16,11 @@ spec:
       labels:
         app: bookbuyer
         version: v1
+      annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/path: "/actuator/prometheus"
+          prometheus.io/port: "14001"
     spec:
-      serviceAccountName: bookbuyer
       containers:
         - name: bookbuyer
           image: addozhang/bookbuyer:latest
@@ -47,6 +31,8 @@ spec:
               value: 'consul,prod'
             - name: IDENTITY
               value: bookbuyer
+            - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
+              value: "version=v1"
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:

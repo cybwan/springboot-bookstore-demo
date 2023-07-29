@@ -5,25 +5,6 @@ rm -f manifests/book*.yaml
 generate_yaml() {
     project_name=$(echo $1 | cut -d "-" -f 1)
 cat <<EOF
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: $project_name
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: $1
-  labels:
-    version: ${2:-v1}
-spec:
-  selector:
-    app: $1
-    version: ${2:-v1}
-  ports:
-    - protocol: TCP
-      port: 14001
-      targetPort: 14001
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -42,8 +23,11 @@ spec:
       labels:
         app: $1
         version: ${2:-v1}
+      annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/path: "/actuator/prometheus"
+          prometheus.io/port: "14001"
     spec:
-      serviceAccountName: $project_name
       containers:
         - name: $1
           image: addozhang/${project_name}:latest
@@ -54,6 +38,8 @@ spec:
               value: 'consul,prod'
             - name: IDENTITY
               value: $1
+            - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
+              value: "version=${2:-v1}"
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:
@@ -71,6 +57,10 @@ spec:
 EOF
 }
 
-for module in bookwarehouse bookstore bookbuyer bookthief bookstore-v2; do
+for module in bookwarehouse bookstore bookbuyer bookthief; do
   generate_yaml $module > ./manifests/$module.yaml
+done
+
+for module in bookstore-v2; do
+  generate_yaml $module v2 > ./manifests/$module.yaml
 done

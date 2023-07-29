@@ -10,6 +10,11 @@ logging:
   level:
     org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
 ---
 # Dev Profile Configuration
 server:
