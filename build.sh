@@ -11,7 +11,7 @@ if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
 fi
 
 for module in bookwarehouse bookstore bookbuyer bookthief; do
-  docker build --platform linux/arm64 --build-arg SERVICE_NAME=$module -t addozhang/$module:latest -f ./Dockerfile ./$module
+  docker buildx build --build-arg SERVICE_NAME=$module -t addozhang/$module:latest -f ./Dockerfile ./$module
   if [ "$DOCKER_PUSH" = true ]; then
       docker push $DOCKER_REPO/$module:latest
   fi
