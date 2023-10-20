@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm -f manifests/book*.yaml
+rm -f manifests/*/book*.yaml
 
 generate_yaml() {
     project_name=$(echo $1 | cut -d "-" -f 1)
@@ -30,12 +30,12 @@ spec:
     spec:
       containers:
         - name: $1
-          image: addozhang/${project_name}:latest
+          image: addozhang/${project_name}-$3:latest
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: 'consul,prod'
+              value: '$3,prod'
             - name: IDENTITY
               value: $1
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
@@ -58,9 +58,11 @@ EOF
 }
 
 for module in bookwarehouse bookstore bookbuyer bookthief; do
-  generate_yaml $module > ./manifests/$module.yaml
+  generate_yaml $module "" "" consul > ./manifests/consul/$module-consul.yaml
+  generate_yaml $module "" "" eureka > ./manifests/eureka/$module-eureka.yaml
 done
 
 for module in bookstore-v2; do
-  generate_yaml $module v2 > ./manifests/$module.yaml
+  generate_yaml $module v2 "" consul > ./manifests/consul/$module-consul.yaml
+  generate_yaml $module v2 "" eureka > ./manifests/eureka/$module-eureka.yaml
 done

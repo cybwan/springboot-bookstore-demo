@@ -1,32 +1,32 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: consul
+  name: eureka
   labels:
-    name: consul
+    name: eureka
 spec:
   selector:
-    app: consul
+    app: eureka
   ports:
     - name: http
-      port: 8500
+      port: 8761
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consul
+  name: eureka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: consul
+      app: eureka
   template:
     metadata:
       labels:
-        app: consul
+        app: eureka
     spec:
       containers:
-        - name: consul
-          image: consul:1.5.3
+        - name: eureka
+          image: flomesh/samples-discovery-server:latest
           ports:
-            - containerPort: 8500
+            - containerPort: 8761
