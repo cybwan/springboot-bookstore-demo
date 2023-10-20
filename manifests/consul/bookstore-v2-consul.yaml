@@ -23,12 +23,12 @@ spec:
     spec:
       containers:
         - name: bookstore-v2
-          image: addozhang/bookstore-:latest
+          image: addozhang/bookstore-consul:latest
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: ',prod'
+              value: 'consul,prod'
             - name: IDENTITY
               value: bookstore-v2
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS

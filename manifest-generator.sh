@@ -58,11 +58,11 @@ EOF
 }
 
 for module in bookwarehouse bookstore bookbuyer bookthief; do
-  generate_yaml $module "" "" consul > ./manifests/consul/$module-consul.yaml
-  generate_yaml $module "" "" eureka > ./manifests/eureka/$module-eureka.yaml
+  generate_yaml $module "" consul > ./manifests/consul/$module-consul.yaml
+  generate_yaml $module "" eureka > ./manifests/eureka/$module-eureka.yaml
 done
 
 for module in bookstore-v2; do
-  generate_yaml $module v2 "" consul > ./manifests/consul/$module-consul.yaml
-  generate_yaml $module v2 "" eureka > ./manifests/eureka/$module-eureka.yaml
+  generate_yaml $module v2 consul > ./manifests/consul/$module-consul.yaml
+  generate_yaml $module v2 eureka > ./manifests/eureka/$module-eureka.yaml
 done

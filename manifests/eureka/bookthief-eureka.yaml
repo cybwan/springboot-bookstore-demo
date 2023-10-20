@@ -23,12 +23,12 @@ spec:
     spec:
       containers:
         - name: bookthief
-          image: addozhang/bookthief-:latest
+          image: addozhang/bookthief-eureka:latest
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: ',prod'
+              value: 'eureka,prod'
             - name: IDENTITY
               value: bookthief
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS

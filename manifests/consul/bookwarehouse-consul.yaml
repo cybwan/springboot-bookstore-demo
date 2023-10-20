@@ -23,12 +23,12 @@ spec:
     spec:
       containers:
         - name: bookwarehouse
-          image: addozhang/bookwarehouse-:latest
+          image: addozhang/bookwarehouse-consul:latest
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: ',prod'
+              value: 'consul,prod'
             - name: IDENTITY
               value: bookwarehouse
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS

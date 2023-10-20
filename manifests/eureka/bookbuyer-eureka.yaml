@@ -23,12 +23,12 @@ spec:
     spec:
       containers:
         - name: bookbuyer
-          image: addozhang/bookbuyer-:latest
+          image: addozhang/bookbuyer-eureka:latest
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: ',prod'
+              value: 'eureka,prod'
             - name: IDENTITY
               value: bookbuyer
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
