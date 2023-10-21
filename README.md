@@ -4,7 +4,7 @@ This is a demo project for Bookstore implemented with SpringCloud. You can get t
 
 ![Architect](docs/springboot-consul+eureka.png)
 
-Currently, it takes Consul as discovery server and will support Eureka or Nacos in the future.
+Currently, it takes Consul and Eureka as discovery server and will support Nacos or others in the future.
 
 ## How to run
 
