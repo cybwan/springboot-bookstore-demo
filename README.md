@@ -2,7 +2,7 @@
 
 This is a demo project for Bookstore implemented with SpringCloud. You can get the architecture of this project from the following picture.
 
-![Architect](https://github.com/addozhang/bookstore-demo/assets/2224492/090e8e0a-d582-4974-9f03-42f0e21e8994)
+![Architect](docs/springboot-consul+eureka.png)
 
 Currently, it takes Consul as discovery server and will support Eureka or Nacos in the future.
 
