@@ -9,12 +9,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bookstore-v2
+      app: bookstore
       version: v2
   template:
     metadata:
       labels:
-        app: bookstore-v2
+        app: bookstore
         version: v2
       annotations:
           prometheus.io/scrape: "true"
@@ -22,7 +22,7 @@ spec:
           prometheus.io/port: "14001"
     spec:
       containers:
-        - name: bookstore-v2
+        - name: bookstore
           image: addozhang/bookstore-consul:latest
           ports:
             - containerPort: 14001

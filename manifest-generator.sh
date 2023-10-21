@@ -1,45 +1,54 @@
 #!/usr/bin/env bash
 
-rm -f manifests/*/book*.yaml
-
 generate_yaml() {
-    project_name=$(echo $1 | cut -d "-" -f 1)
-cat <<EOF
+    local module=$1
+    local version=${2:-v1}
+    local registry_type=$3
+
+    # Determine the deployment name and app label
+    local deploy_name=$module
+    local app_label=$module
+
+    if [[ $module == "bookstore-v2" ]]; then
+        app_label="bookstore"
+    fi
+
+    cat <<EOF > manifests/$registry_type/$deploy_name-$registry_type.yaml
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: $1
+  name: $deploy_name
   labels:
-    version: ${2:-v1}
+    version: $version
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: $1
-      version: ${2:-v1}
+      app: $app_label
+      version: $version
   template:
     metadata:
       labels:
-        app: $1
-        version: ${2:-v1}
+        app: $app_label
+        version: $version
       annotations:
           prometheus.io/scrape: "true"
           prometheus.io/path: "/actuator/prometheus"
           prometheus.io/port: "14001"
     spec:
       containers:
-        - name: $1
-          image: addozhang/${project_name}-$3:latest
+        - name: $app_label
+          image: addozhang/${app_label}-$registry_type:latest
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: '$3,prod'
+              value: '$registry_type,prod'
             - name: IDENTITY
-              value: $1
+              value: $deploy_name
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
-              value: "version=${2:-v1}"
+              value: "version=$version"
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:
@@ -57,12 +66,14 @@ spec:
 EOF
 }
 
+# Remove existing manifests
+rm -f manifests/*/book*.yaml
+
+# For each module, generate the yaml
 for module in bookwarehouse bookstore bookbuyer bookthief; do
-  generate_yaml $module "" consul > ./manifests/consul/$module-consul.yaml
-  generate_yaml $module "" eureka > ./manifests/eureka/$module-eureka.yaml
+    generate_yaml "$module" v1 consul
+    generate_yaml "$module" v1 eureka
 done
 
-for module in bookstore-v2; do
-  generate_yaml $module v2 consul > ./manifests/consul/$module-consul.yaml
-  generate_yaml $module v2 eureka > ./manifests/eureka/$module-eureka.yaml
-done
+generate_yaml "bookstore-v2" v2 consul
+generate_yaml "bookstore-v2" v2 eureka
