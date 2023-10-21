@@ -49,6 +49,8 @@ spec:
               value: $deploy_name
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
               value: "version=$version"
+            - name: EUREKA_INSTANCE_METADATAMAP_VERSION
+              value: $version
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:

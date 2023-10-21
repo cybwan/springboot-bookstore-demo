@@ -33,6 +33,8 @@ spec:
               value: bookthief
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
               value: "version=v1"
+            - name: EUREKA_INSTANCE_METADATAMAP_VERSION
+              value: v1
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:
