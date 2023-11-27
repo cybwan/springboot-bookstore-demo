@@ -9,6 +9,8 @@
         <module>bookthief</module>
         <module>bookwarehouse</module>
         <module>common</module>
+        <module>httpbin</module>
+        <module>curl</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

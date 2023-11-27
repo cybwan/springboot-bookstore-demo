@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curl
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: curl
+        version: v1
+      annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/path: "/actuator/prometheus"
+          prometheus.io/port: "14001"
+    spec:
+      containers:
+        - name: curl
+          image: addozhang/curl-eureka:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 14001
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: 'eureka,prod'
+            - name: IDENTITY
+              value: curl
+            - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
+              value: "version=v1"
+            - name: EUREKA_INSTANCE_METADATAMAP_VERSION
+              value: v1
+#            - name: SPRING_CLOUD_CONSUL_HOST
+#              value: 'consul.default'
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 14001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 14001
+            initialDelaySeconds: 60
+            periodSeconds: 30

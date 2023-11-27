@@ -72,7 +72,7 @@ EOF
 rm -f manifests/*/book*.yaml
 
 # For each module, generate the yaml
-for module in bookwarehouse bookstore bookbuyer bookthief; do
+for module in bookwarehouse bookstore bookbuyer bookthief curl httpbin; do
     generate_yaml "$module" v1 consul
     generate_yaml "$module" v1 eureka
 done

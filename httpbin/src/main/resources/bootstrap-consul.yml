@@ -1,0 +1,29 @@
+spring:
+  cloud:
+    consul:
+      config:
+        enabled: false
+
+---
+# Dev Profile Configuration
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+  zone: dev
+  config:
+    activate:
+      on-profile: dev
+
+---
+# Prod Profile Configuration
+spring:
+  cloud:
+    consul:
+      host: consul.default.svc.cluster.local
+      port: 8500
+  zone: prod
+  config:
+    activate:
+      on-profile: prod
