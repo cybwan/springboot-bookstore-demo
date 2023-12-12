@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 DOCKER_REPO=addozhang
+TAG=0.2
 
 if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -10,9 +11,9 @@ fi
 for p in consul eureka; do
   docker run -it --rm -v $PWD:/project -v /opt/maven-repo:/root/.m2 -w /project maven:3.8.1-openjdk-8-slim mvn clean install -DskipTests=true -P $p
   for module in bookwarehouse bookstore bookbuyer bookthief curl httpbin; do
-    docker buildx build --build-arg SERVICE_NAME=$module -t addozhang/$module-$p:latest -f ./Dockerfile ./$module
+    docker buildx build --build-arg SERVICE_NAME=$module -t addozhang/$module-$p:$TAG -f ./Dockerfile ./$module
     if [ "$DOCKER_PUSH" = true ]; then
-        docker push $DOCKER_REPO/$module-$p:latest
+        docker push $DOCKER_REPO/$module-$p:$TAG
     fi
   done
 done
