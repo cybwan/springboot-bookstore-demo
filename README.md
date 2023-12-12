@@ -6,6 +6,10 @@ This is a demo project for Bookstore implemented with SpringCloud. You can get t
 
 Currently, it takes Consul and Eureka as discovery server and will support Nacos or others in the future.
 
+At the same time, the communication among services supports HTTP and gRPC. `bookstore/bookwarehouse` exposes HTTP and gRPC services, `bookbuyer/bookthief` only exposes HTTP service.
+
+**By default `bookbuyer/bookthief` calls `bookstore` via HTTP. In order to switch to gRPC, an environment `protocol=grpc` is required.**
+
 ## How to run
 
 This demo supports two discovery servers: Consul and Eureka. You can choose one of them to run.
@@ -26,7 +30,7 @@ mvn clean install -P eureka
 All modules will run with profiles `dev` and `consul` by default. You can change it with `-Dspring.profiles.active=xxx` option (it's `-Dspring-boot.run.profiles` with `mvn spring-boot:run`).
 
 > - `dev` profile will assign different port for each module.
-> - `prod` profile will assign same port 14001 for each module. It suits for running in Kubernetes.
+> - `prod` profile will assign same HTTP port `14001` for each module. It suits for running in Kubernetes. The bookstore and bookwarehouse also listen on gRPC port `9090`.
 > - `consul` profile will register the service to Consul server. Combining with `dev` profile, its address is `localhost:8500`. Combining with `prod` profile, its address is `consul.default:8500`.
 > - `eureka` profile will register the service to Eureka server. Combining with `dev` profile, its address is `localhost:8761`. Combining with `prod` profile, its address is `eureka.default:8761`.
 
@@ -82,7 +86,7 @@ It will build and push images for all modules for both Consul and Eureka on one 
 ./build.sh
 ```
 
-The script will push images to Docker Hub automically if you set `DOCKER_USERNAME` and `DOCKER_PASSWORD` environment variables in advance.
+The script will push images to Docker Hub automatically if you set `DOCKER_USERNAME` and `DOCKER_PASSWORD` environment variables in advance.
 
 ### Run in Kubernetes
 
