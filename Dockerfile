@@ -11,12 +11,7 @@ WORKDIR /
 RUN apk add --update bash
 RUN apk add --update curl && rm -rf /var/cache/apk/*
 
-COPY --from=builder /app/curl/target/curl-0.0.1-SNAPSHOT.jar .
-COPY --from=builder /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar .
-COPY --from=builder /app/bookthief/target/bookthief-0.0.1-SNAPSHOT.jar .
-COPY --from=builder /app/bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar .
-COPY --from=builder /app/bookstore/target/bookstore-0.0.1-SNAPSHOT.jar .
-COPY --from=builder /app/bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /app/$SERVICE_NAME/target/$SERVICE_NAME-0.0.1-SNAPSHOT.jar .
 
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.28.0/opentelemetry-javaagent.jar .
 
