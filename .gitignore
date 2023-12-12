@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+### Ignore generated gRPC sources
+**/generated
 
 ### STS ###
 .apt_generated

@@ -23,6 +23,9 @@ spring:
   config:
     activate:
       on-profile: dev
+grpc:
+  server:
+    port: 9090
 ---
 # Prod Profile Configuration
 server:

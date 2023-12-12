@@ -15,6 +15,13 @@ management:
     web:
       exposure:
         include: "health,info,prometheus"
+
+grpc:
+  client:
+    GLOBAL:
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-without-calls: true
 ---
 # Dev Profile Configuration
 server:

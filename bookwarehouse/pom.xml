@@ -47,6 +47,14 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.flomesh</groupId>
+            <artifactId>grpc-lib</artifactId>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

@@ -11,6 +11,7 @@
         <module>common</module>
         <module>httpbin</module>
         <module>curl</module>
+        <module>grpc-lib</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -53,11 +54,25 @@
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>io.flomesh</groupId>
+                <artifactId>grpc-lib</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
                 <version>1.9.13</version>
+            </dependency>
+            <dependency>
+                <groupId>net.devh</groupId>
+                <artifactId>grpc-server-spring-boot-starter</artifactId>
+                <version>2.15.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>net.devh</groupId>
+                <artifactId>grpc-client-spring-boot-starter</artifactId>
+                <version>2.15.0.RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

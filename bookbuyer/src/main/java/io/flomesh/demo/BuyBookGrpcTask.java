@@ -1,31 +1,29 @@
 package io.flomesh.demo;
 
-import io.flomesh.demo.client.BookstoreClient;
 import io.flomesh.demo.controller.BookBuyerController;
-import lombok.extern.java.Log;
+import io.flomesh.demo.grpc.stub.BookstoreServiceGrpc;
+import io.flomesh.demo.grpc.stub.Empty;
 import lombok.extern.slf4j.Slf4j;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class BuyBookTask {
+@ConditionalOnProperty(name = "protocol", havingValue = "grpc")
+public class BuyBookGrpcTask {
 
-    private final BookstoreClient client;
-    private final BookBuyerController controller;
-
+    @GrpcClient("bookstore")
+    private BookstoreServiceGrpc.BookstoreServiceBlockingStub client;
     @Autowired
-    public BuyBookTask(BookBuyerController controller, BookstoreClient client) {
-        this.controller = controller;
-        this.client = client;
-    }
-
+    private BookBuyerController controller;
 
     @Scheduled(fixedRate = 1000)
     public void buyABook(){
         try {
-            if (client.sellBook()) {
+            if (client.sellBook(Empty.newBuilder().build()).getSuccess()) {
                 controller.increaseCounter();
                 log.info("A book is bought");
             }
