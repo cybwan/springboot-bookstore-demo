@@ -18,4 +18,9 @@ ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/release
 ENV SERVICE_NAME=$SERVICE_NAME
 ENV JAVA_OPTS="-Xms256M -Xmx512M"
 ENV JAVA_TOOL_OPTIONS "-javaagent:./opentelemetry-javaagent.jar -Dotel.resource.attributes=service.name=${SERVICE_NAME}"
-ENTRYPOINT java -Dotel.traces.exporter=logging -Dotel.metrics.exporter=none -Dotel.propagators=tracecontext,baggage,b3multi -jar ${SERVICE_NAME}-0.0.1-SNAPSHOT.jar
+ENTRYPOINT java \
+    -Dotel.traces.exporter=logging \
+    -Dotel.metrics.exporter=none \
+    -Dotel.propagators=tracecontext,baggage,b3multi \
+    -Dspring.config.location=file:///config/application.yml \
+    -jar ${SERVICE_NAME}-0.0.1-SNAPSHOT.jar
