@@ -15,6 +15,7 @@ COPY --from=builder /app/$SERVICE_NAME/target/$SERVICE_NAME-0.0.1-SNAPSHOT.jar .
 
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.28.0/opentelemetry-javaagent.jar .
 
+ENV SERVICE_NAME=$SERVICE_NAME
 ENV JAVA_OPTS="-Xms256M -Xmx512M"
-ENV JAVA_TOOL_OPTIONS "-javaagent:./opentelemetry-javaagent.jar -Dotel.resource.attributes=service.name=$SERVICE_NAME}"
-ENTRYPOINT ["java","-Dotel.traces.exporter=logging","-Dotel.metrics.exporter=none","-Dotel.propagators=tracecontext,baggage,b3multi","-jar","$SERVICE_NAME-0.0.1-SNAPSHOT.jar"]
+ENV JAVA_TOOL_OPTIONS "-javaagent:./opentelemetry-javaagent.jar -Dotel.resource.attributes=service.name=${SERVICE_NAME}"
+ENTRYPOINT java -Dotel.traces.exporter=logging -Dotel.metrics.exporter=none -Dotel.propagators=tracecontext,baggage,b3multi -jar ${SERVICE_NAME}-0.0.1-SNAPSHOT.jar
