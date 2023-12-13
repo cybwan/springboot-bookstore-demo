@@ -1,7 +1,7 @@
 FROM maven:3-openjdk-8 AS builder
 WORKDIR /app
 COPY . .
-RUN --mount=type=cache,target=/root/.m2 mvn clean package
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -P eureka
 
 FROM openjdk:8-jre-alpine
 ARG SERVICE_NAME
