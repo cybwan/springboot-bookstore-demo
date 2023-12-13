@@ -1,26 +1,38 @@
 FROM maven:3-openjdk-8 AS builder
 WORKDIR /app
 COPY . .
+
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.28.0/opentelemetry-javaagent.jar .
+
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -P eureka
+RUN mv /app/curl/target/curl-0.0.1-SNAPSHOT.jar curl-eureka.jar
+RUN mv /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar httpbin-eureka.jar
+RUN mv /app/bookthief/target/bookthief-0.0.1-SNAPSHOT.jar bookthief-eureka.jar
+RUN mv /app/bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar bookbuyer-eureka.jar
+RUN mv /app/bookstore/target/bookstore-0.0.1-SNAPSHOT.jar bookstore-eureka.jar
+RUN mv /app/bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar bookwarehouse-eureka.jar
+
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -P consul
+RUN mv /app/curl/target/curl-0.0.1-SNAPSHOT.jar curl-consul.jar
+RUN mv /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar httpbin-consul.jar
+RUN mv /app/bookthief/target/bookthief-0.0.1-SNAPSHOT.jar bookthief-consul.jar
+RUN mv /app/bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar bookbuyer-consul.jar
+RUN mv /app/bookstore/target/bookstore-0.0.1-SNAPSHOT.jar bookstore-consul.jar
+RUN mv /app/bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar bookwarehouse-consul.jar
+
+RUN --mount=type=cache,target=/root/.m2 mvn clean package
+RUN mv /app/curl/target/curl-0.0.1-SNAPSHOT.jar curl.jar
+RUN mv /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar httpbin.jar
+RUN mv /app/bookthief/target/bookthief-0.0.1-SNAPSHOT.jar bookthief.jar
+RUN mv /app/bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar bookbuyer.jar
+RUN mv /app/bookstore/target/bookstore-0.0.1-SNAPSHOT.jar bookstore.jar
+RUN mv /app/bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar bookwarehouse.jar
 
 FROM openjdk:8-jre-alpine
-ARG SERVICE_NAME
 
 WORKDIR /
 
 RUN apk add --update bash
 RUN apk add --update curl && rm -rf /var/cache/apk/*
 
-COPY --from=builder /app/$SERVICE_NAME/target/$SERVICE_NAME-0.0.1-SNAPSHOT.jar .
-
-ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.28.0/opentelemetry-javaagent.jar .
-
-ENV SERVICE_NAME=$SERVICE_NAME
-ENV JAVA_OPTS="-Xms256M -Xmx512M"
-ENV JAVA_TOOL_OPTIONS "-javaagent:./opentelemetry-javaagent.jar -Dotel.resource.attributes=service.name=${SERVICE_NAME}"
-ENTRYPOINT java \
-    -Dotel.traces.exporter=logging \
-    -Dotel.metrics.exporter=none \
-    -Dotel.propagators=tracecontext,baggage,b3multi \
-    -Dspring.config.location=file:///config/application.yml \
-    -jar ${SERVICE_NAME}-0.0.1-SNAPSHOT.jar
+COPY --from=builder /app/*.jar .
