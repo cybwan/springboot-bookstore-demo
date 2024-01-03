@@ -4,6 +4,7 @@ generate_yaml() {
     local module=$1
     local version=${2:-v1}
     local registry_type=$3
+    local tag=$4
 
     # Determine the deployment name and app label
     local deploy_name=$module
@@ -39,7 +40,7 @@ spec:
     spec:
       containers:
         - name: $app_label
-          image: addozhang/${app_label}-$registry_type:latest
+          image: addozhang/${app_label}-$registry_type:$tag
           ports:
             - containerPort: 14001
           env:
@@ -73,9 +74,11 @@ rm -f manifests/*/book*.yaml
 
 # For each module, generate the yaml
 for module in bookwarehouse bookstore bookbuyer bookthief curl httpbin; do
-    generate_yaml "$module" v1 consul
-    generate_yaml "$module" v1 eureka
+    generate_yaml "$module" v1 consul latest
+    generate_yaml "$module" v1 eureka latest
+    generate_yaml "$module" v1 nacos 0.2
 done
 
-generate_yaml "bookstore-v2" v2 consul
-generate_yaml "bookstore-v2" v2 eureka
+generate_yaml "bookstore-v2" v2 consul latest
+generate_yaml "bookstore-v2" v2 eureka latest
+generate_yaml "bookstore-v2" v2 nacos 0.2

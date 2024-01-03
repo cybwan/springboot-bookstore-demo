@@ -2,39 +2,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: curl
+  name: bookstore-v2
   labels:
-    version: v1
+    version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: curl
-      version: v1
+      app: bookstore
+      version: v2
   template:
     metadata:
       labels:
-        app: curl
-        version: v1
+        app: bookstore
+        version: v2
       annotations:
           prometheus.io/scrape: "true"
           prometheus.io/path: "/actuator/prometheus"
           prometheus.io/port: "14001"
     spec:
       containers:
-        - name: curl
-          image: addozhang/curl-eureka:latest
+        - name: bookstore
+          image: addozhang/bookstore-nacos:0.2
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: 'eureka,prod'
+              value: 'nacos,prod'
             - name: IDENTITY
-              value: curl
+              value: bookstore-v2
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
-              value: "version=v1"
+              value: "version=v2"
             - name: EUREKA_INSTANCE_METADATAMAP_VERSION
-              value: v1
+              value: v2
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:

@@ -23,12 +23,12 @@ spec:
     spec:
       containers:
         - name: curl
-          image: addozhang/curl-eureka:latest
+          image: addozhang/curl-nacos:0.2
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: 'eureka,prod'
+              value: 'nacos,prod'
             - name: IDENTITY
               value: curl
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS

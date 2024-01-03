@@ -8,7 +8,6 @@ spring:
 
 logging:
   level:
-    root: DEBUG
     org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
 
 management:
