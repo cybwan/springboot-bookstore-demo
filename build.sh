@@ -12,7 +12,7 @@ fi
 
 for p in eureka consul nacos; do
   docker run -it --rm -v $PWD:/project -v /opt/maven-repo:/root/.m2 -w /project maven:3.8.6-openjdk-8-slim mvn clean install -DskipTests=true -P $p
-  for module in bookwarehouse bookstore bookbuyer bookthief curl httpbin; do
+  for module in bookwarehouse bookstore bookbuyer bookthief curl httpbin gateway; do
     if [ "$DOCKER_PUSH" = true ]; then
         docker buildx build --platform linux/amd64,linux/arm64 --build-arg SERVICE_NAME=$module -t addozhang/$module-$p:$TAG -f ./Dockerfile ./$module --push
     else

@@ -12,6 +12,7 @@
         <module>httpbin</module>
         <module>curl</module>
         <module>grpc-lib</module>
+        <module>gateway</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
