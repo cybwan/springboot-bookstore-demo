@@ -17,10 +17,6 @@ public class BookstoreServiceProvider implements BookstoreService {
     @Override
     public boolean sellBook() {
         log.info("sellBook() is called");
-        if(bookWarehouseService.restockBooks(Instants.DEFAULT_ID, 1)) {
-            return true;
-        } else {
-            return false;
-        }
+        return bookWarehouseService.restockBooks(Instants.DEFAULT_ID, 1);
     }
 }

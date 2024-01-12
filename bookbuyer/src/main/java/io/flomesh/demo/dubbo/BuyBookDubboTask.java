@@ -1,10 +1,8 @@
 package io.flomesh.demo.dubbo;
 
 import io.flomesh.demo.api.BookstoreService;
-import io.flomesh.demo.controller.BookBuyerController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
