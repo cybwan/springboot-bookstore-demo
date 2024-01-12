@@ -97,6 +97,22 @@ mvn spring-boot:run -f bookstore -P nacos -Dspring-boot.run.profiles=nacos,dev
 mvn spring-boot:run -f bookbuyer -P nacos -Dspring-boot.run.profiles=nacos,dev
 ```
 
+### Dubbo
+
+Start a Zookeeper server with Docker:
+
+```bash
+docker run --rm --name zookeeper -p 2181:2181 zookeeper
+```
+
+Then, you can start the project with the following command:
+
+```bash
+mvn spring-boot:run -f bookwarehouse -P dubbo -Dspring-boot.run.profiles=dubbo,dev
+mvn spring-boot:run -f bookstore -P dubbo -Dspring-boot.run.profiles=dubbo,dev
+mvn spring-boot:run -f bookbuyer -P dubbo -Dspring-boot.run.profiles=dubbo,dev
+```
+
 ## Build docker image
 
 You can build docker image with the following command. Note, you should execute this command on x86_64 platform.
@@ -104,7 +120,8 @@ You can build docker image with the following command. Note, you should execute 
 It will build and push images for all modules for both Consul and Eureka on one execution. 
 
 ```bash
-./build.sh
+./build-http.sh #for http
+./build-dubbo.sh #for dubbo
 ```
 
 The script will push images to Docker Hub automatically if you set `DOCKER_USERNAME` and `DOCKER_PASSWORD` environment variables in advance.

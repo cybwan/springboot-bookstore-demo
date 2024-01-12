@@ -15,6 +15,10 @@ management:
     web:
       exposure:
         include: "health,info,prometheus"
+
+dubbo:
+  enabled: false #disable dubbo bootstrap in profiles other than dubbo
+
 ---
 # Dev Profile Configuration
 server:

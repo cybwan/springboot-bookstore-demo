@@ -22,6 +22,10 @@ grpc:
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-without-calls: true
+
+dubbo:
+  enabled: false #disable dubbo bootstrap in profiles other than dubbo
+
 ---
 # Dev Profile Configuration
 server:

@@ -7,8 +7,11 @@ import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @GrpcService
+@ConditionalOnBean(BookstoreController.class)
 public class BookStoreGrpcService extends BookstoreServiceGrpc.BookstoreServiceImplBase {
 
     @GrpcClient("bookwarehouse")
