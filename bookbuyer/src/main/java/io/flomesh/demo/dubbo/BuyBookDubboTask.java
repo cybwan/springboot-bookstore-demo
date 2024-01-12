@@ -3,11 +3,14 @@ package io.flomesh.demo.dubbo;
 import io.flomesh.demo.api.BookstoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@Profile("dubbo")
 public class BuyBookDubboTask {
 
     @DubboReference(version = "${service.version.bookstore}")

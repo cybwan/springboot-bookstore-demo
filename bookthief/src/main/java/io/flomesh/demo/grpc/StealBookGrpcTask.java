@@ -6,15 +6,15 @@ import io.flomesh.demo.grpc.stub.Empty;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 @ConditionalOnProperty(name = "protocol", havingValue = "grpc")
-@ConditionalOnBean(BookThiefController.class)
+@Profile({"eureka", "consul", "nacos"})
 public class StealBookGrpcTask {
 
     @GrpcClient("bookstore")
