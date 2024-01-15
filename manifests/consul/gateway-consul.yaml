@@ -24,6 +24,7 @@ spec:
       containers:
         - name: gateway
           image: addozhang/gateway-consul:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:

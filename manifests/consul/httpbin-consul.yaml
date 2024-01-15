@@ -24,6 +24,7 @@ spec:
       containers:
         - name: httpbin
           image: addozhang/httpbin-consul:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:

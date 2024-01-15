@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpbin
+  name: bookthief
   labels:
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: httpbin
+      app: bookthief
       version: v1
   template:
     metadata:
       labels:
-        app: httpbin
+        app: bookthief
         version: v1
       annotations:
           prometheus.io/scrape: "true"
@@ -22,16 +22,16 @@ spec:
           prometheus.io/port: "14001"
     spec:
       containers:
-        - name: httpbin
-          image: addozhang/httpbin-nacos:0.2
+        - name: bookthief
+          image: addozhang/bookthief-eureka:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: 'nacos,prod'
+              value: 'eureka,prod'
             - name: IDENTITY
-              value: httpbin
+              value: bookthief
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
               value: "version=v1"
             - name: EUREKA_INSTANCE_METADATAMAP_VERSION

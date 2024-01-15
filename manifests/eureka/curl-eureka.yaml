@@ -24,6 +24,7 @@ spec:
       containers:
         - name: curl
           image: addozhang/curl-eureka:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:

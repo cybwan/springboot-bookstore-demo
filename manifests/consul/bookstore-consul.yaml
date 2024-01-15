@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpbin
+  name: bookstore
   labels:
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: httpbin
+      app: bookstore
       version: v1
   template:
     metadata:
       labels:
-        app: httpbin
+        app: bookstore
         version: v1
       annotations:
           prometheus.io/scrape: "true"
@@ -22,16 +22,16 @@ spec:
           prometheus.io/port: "14001"
     spec:
       containers:
-        - name: httpbin
-          image: addozhang/httpbin-nacos:0.2
+        - name: bookstore
+          image: addozhang/bookstore-consul:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: 'nacos,prod'
+              value: 'consul,prod'
             - name: IDENTITY
-              value: httpbin
+              value: bookstore
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
               value: "version=v1"
             - name: EUREKA_INSTANCE_METADATAMAP_VERSION

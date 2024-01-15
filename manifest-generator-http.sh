@@ -41,6 +41,7 @@ spec:
       containers:
         - name: $app_label
           image: addozhang/${app_label}-$registry_type:$tag
+          imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:

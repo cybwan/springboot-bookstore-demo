@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpbin
+  name: bookwarehouse
   labels:
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: httpbin
+      app: bookwarehouse
       version: v1
   template:
     metadata:
       labels:
-        app: httpbin
+        app: bookwarehouse
         version: v1
       annotations:
           prometheus.io/scrape: "true"
@@ -22,8 +22,8 @@ spec:
           prometheus.io/port: "14001"
     spec:
       containers:
-        - name: httpbin
-          image: addozhang/httpbin-nacos:0.2
+        - name: bookwarehouse
+          image: addozhang/bookwarehouse-nacos:0.2
           imagePullPolicy: Always
           ports:
             - containerPort: 14001
@@ -31,7 +31,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: 'nacos,prod'
             - name: IDENTITY
-              value: httpbin
+              value: bookwarehouse
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
               value: "version=v1"
             - name: EUREKA_INSTANCE_METADATAMAP_VERSION
