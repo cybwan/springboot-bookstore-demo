@@ -53,6 +53,8 @@ spec:
               value: "version=$version"
             - name: EUREKA_INSTANCE_METADATAMAP_VERSION
               value: $version
+            - name: SPRING_CLOUD_NACOS_DISCOVERY_METADATA_VERSION
+              value: $version
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:
