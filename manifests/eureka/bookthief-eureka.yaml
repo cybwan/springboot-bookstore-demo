@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: bookthief
-          image: addozhang/bookthief-eureka:latest
+          image: addozhang/bookthief-eureka:0.3
           imagePullPolicy: Always
           ports:
             - containerPort: 14001
@@ -38,6 +38,12 @@ spec:
               value: v1
             - name: SPRING_CLOUD_NACOS_DISCOVERY_METADATA_VERSION
               value: v1
+#            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
+#              value: 'nacos.default:8848'
+#            - name: SPRING_CLOUD_NACOS_DISCOVERY_USERNAME
+#              value: nacos
+#            - name: SPRING_CLOUD_NACOS_DISCOVERY_PASSWORD
+#              value: nacos
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:

@@ -13,6 +13,9 @@ generate_yaml() {
     if [[ $module == "bookstore-v2" ]]; then
         app_label="bookstore"
     fi
+    if [[ $module == "httpbin-v2" ]]; then
+        app_label="httpbin"
+    fi
 
     cat <<EOF > manifests/$registry_type/$deploy_name-$registry_type.yaml
 ---
@@ -55,6 +58,12 @@ spec:
               value: $version
             - name: SPRING_CLOUD_NACOS_DISCOVERY_METADATA_VERSION
               value: $version
+#            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
+#              value: 'nacos.default:8848'
+#            - name: SPRING_CLOUD_NACOS_DISCOVERY_USERNAME
+#              value: nacos
+#            - name: SPRING_CLOUD_NACOS_DISCOVERY_PASSWORD
+#              value: nacos
 #            - name: SPRING_CLOUD_CONSUL_HOST
 #              value: 'consul.default'
           readinessProbe:
@@ -77,11 +86,15 @@ rm -f manifests/*/book*.yaml
 
 # For each module, generate the yaml
 for module in bookwarehouse bookstore bookbuyer bookthief curl httpbin gateway; do
-    generate_yaml "$module" v1 consul latest
-    generate_yaml "$module" v1 eureka latest
-    generate_yaml "$module" v1 nacos 0.2
+    generate_yaml "$module" v1 consul 0.3
+    generate_yaml "$module" v1 eureka 0.3
+    generate_yaml "$module" v1 nacos 0.3
 done
 
-generate_yaml "bookstore-v2" v2 consul latest
-generate_yaml "bookstore-v2" v2 eureka latest
-generate_yaml "bookstore-v2" v2 nacos 0.2
+generate_yaml "bookstore-v2" v2 consul 0.3
+generate_yaml "bookstore-v2" v2 eureka 0.3
+generate_yaml "bookstore-v2" v2 nacos 0.3
+
+generate_yaml "httpbin-v2" v2 consul 0.3
+generate_yaml "httpbin-v2" v2 eureka 0.3
+generate_yaml "httpbin-v2" v2 nacos 0.3

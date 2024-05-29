@@ -3,7 +3,7 @@
 set -e
 
 DOCKER_REPO=addozhang
-TAG=0.2
+TAG=0.3
 
 if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD

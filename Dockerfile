@@ -6,5 +6,6 @@ ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/release
 COPY ./target/*.jar /app/app.jar
 
 ENV JAVA_OPTS="-Xms256M -Xmx512M"
-ENV JAVA_TOOL_OPTIONS "-javaagent:./opentelemetry-javaagent.jar -Dotel.resource.attributes=service.name=$SERVICE_NAME}"
-ENTRYPOINT ["java","-Dotel.traces.exporter=logging","-Dotel.metrics.exporter=none","-Dotel.propagators=tracecontext,baggage,b3multi","-jar","app.jar"]
+#ENV JAVA_TOOL_OPTIONS "-javaagent:./opentelemetry-javaagent.jar -Dotel.resource.attributes=service.name=$SERVICE_NAME}"
+#ENTRYPOINT ["java","-Dotel.traces.exporter=logging","-Dotel.metrics.exporter=none","-Dotel.propagators=tracecontext,baggage,b3multi","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]

@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpbin
+  name: httpbin-v2
   labels:
-    version: v1
+    version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: httpbin
-      version: v1
+      version: v2
   template:
     metadata:
       labels:
         app: httpbin
-        version: v1
+        version: v2
       annotations:
           prometheus.io/scrape: "true"
           prometheus.io/path: "/actuator/prometheus"
@@ -23,21 +23,21 @@ spec:
     spec:
       containers:
         - name: httpbin
-          image: addozhang/httpbin-consul:0.3
+          image: addozhang/httpbin-eureka:0.3
           imagePullPolicy: Always
           ports:
             - containerPort: 14001
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: 'consul,prod'
+              value: 'eureka,prod'
             - name: IDENTITY
-              value: httpbin
+              value: httpbin-v2
             - name: SPRING_CLOUD_CONSUL_DISCOVERY_TAGS
-              value: "version=v1"
+              value: "version=v2"
             - name: EUREKA_INSTANCE_METADATAMAP_VERSION
-              value: v1
+              value: v2
             - name: SPRING_CLOUD_NACOS_DISCOVERY_METADATA_VERSION
-              value: v1
+              value: v2
 #            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
 #              value: 'nacos.default:8848'
 #            - name: SPRING_CLOUD_NACOS_DISCOVERY_USERNAME
