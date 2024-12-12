@@ -97,16 +97,6 @@ mvn spring-boot:run -f bookstore -P nacos -Dspring-boot.run.profiles=nacos,dev
 mvn spring-boot:run -f bookbuyer -P nacos -Dspring-boot.run.profiles=nacos,dev
 ```
 
-
-
-```bash
-mvn clean package -P dubbo
-
-java -jar bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
-java -jar bookstore/target/bookstore-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
-java -jar bookstore/target/bookstore-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
-```
-
 ### Dubbo
 
 Start a Zookeeper server with Docker:
@@ -121,6 +111,14 @@ Then, you can start the project with the following command:
 mvn spring-boot:run -f bookwarehouse -P dubbo -Dspring-boot.run.profiles=dubbo,dev
 mvn spring-boot:run -f bookstore -P dubbo -Dspring-boot.run.profiles=dubbo,dev
 mvn spring-boot:run -f bookbuyer -P dubbo -Dspring-boot.run.profiles=dubbo,dev
+```
+
+```bash
+mvn clean package -P dubbo
+
+java -jar bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
+java -jar bookstore/target/bookstore-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
+java -jar bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
 ```
 
 ## Build docker image
