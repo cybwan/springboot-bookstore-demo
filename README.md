@@ -14,4 +14,7 @@ Then, you can start the project with the following command:
 java -jar bookwarehouse-dubbo.jar --spring.profiles.active=dubbo,dev
 java -jar bookstore-dubbo.jar --spring.profiles.active=dubbo,dev
 java -jar bookbuyer-dubbo.jar --spring.profiles.active=dubbo,dev
+
+java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+java -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev
 ```
