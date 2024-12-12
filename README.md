@@ -119,6 +119,10 @@ mvn clean package -P dubbo
 java -jar bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
 java -jar bookstore/target/bookstore-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
 java -jar bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
+
+
+java -jar httpbin/target/httpbin-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
+java -jar curl/target/curl-0.0.1-SNAPSHOT.jar --spring.profiles.active=dubbo,dev
 ```
 
 ## Build docker image

@@ -29,6 +29,8 @@ RUN mv /app/bookstore/target/bookstore-0.0.1-SNAPSHOT.jar bookstore-consul.jar
 RUN mv /app/bookwarehouse/target/bookwarehouse-0.0.1-SNAPSHOT.jar bookwarehouse-consul.jar
 
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -P dubbo
+RUN mv /app/curl/target/curl-0.0.1-SNAPSHOT.jar curl-dubbo.jar
+RUN mv /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar httpbin-dubbo.jar
 RUN mv /app/bookthief/target/bookthief-0.0.1-SNAPSHOT.jar bookthief-dubbo.jar
 RUN mv /app/bookbuyer/target/bookbuyer-0.0.1-SNAPSHOT.jar bookbuyer-dubbo.jar
 RUN mv /app/bookstore/target/bookstore-0.0.1-SNAPSHOT.jar bookstore-dubbo.jar

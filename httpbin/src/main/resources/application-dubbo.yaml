@@ -1,0 +1,31 @@
+service:
+  version:
+    httpbin: v1
+dubbo:
+  enabled: true
+  scan:
+    base-packages: io.flomesh.demo.simple.dubbo
+
+grpc:
+  server:
+    port: -1 #disable grpc server
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+dubbo:
+  registry:
+    address: zookeeper://localhost:2181
+  protocol:
+    port: 20880
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+dubbo:
+  registry:
+    address: zookeeper://zookeeper.default.svc.cluster.local:2181
+
