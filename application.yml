@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    default:
+      - "dubbo"
+  application:
+    name: curl
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+dubbo:
+  enabled: false #disable dubbo bootstrap in profiles other than dubbo
+---
+# Prod Profile Configuration
+server:
+  port: 14001
+spring:
+  config:
+    activate:
+      on-profile: dubbo
