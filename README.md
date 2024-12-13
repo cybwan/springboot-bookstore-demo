@@ -18,10 +18,12 @@ sudo ip netns exec s1 ifconfig eth0 10.0.0.2/24 up
 sudo ip netns exec s1 ip route add default via 10.0.0.1
 sudo ip netns exec s1 ifconfig lo up
 
+#启动 zk 服务
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh start
+#确认 zk 服务
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh status | grep 2181
 
-nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+nohup ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
 nohup java -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
@@ -29,6 +31,9 @@ curl 10.0.0.1:14001 -I
 curl -s 10.0.0.1:14001
 echo $(curl -s 10.0.0.1:14001)
 
+#确认调用正常后, kill 掉 s1 下的 httpbin java 进程, 用下面命令重启
+nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
-ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+#pipy dubbo proxy 运行在 10.0.0.1:6666 下 即可,
+#请求转发给 10.0.0.2:20880
 ```
