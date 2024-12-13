@@ -34,6 +34,6 @@ echo $(curl -s 10.0.0.1:14001)
 #确认调用正常后, kill 掉 s1 下的 httpbin java 进程, 用下面命令重启
 nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
-#pipy dubbo proxy 运行在 10.0.0.1:6666 下 即可,
+#pipy dubbo proxy 运行在 10.0.0.1:6666 即可,
 #请求转发给 10.0.0.2:20880
 ```
