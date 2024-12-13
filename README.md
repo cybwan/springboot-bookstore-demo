@@ -23,22 +23,30 @@ apache-zookeeper-3.6.2-bin/bin/zkServer.sh start
 #确认 zk 服务
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh status | grep 2181
 
-nohup ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+#启动 httpbin provider 服务
+#nohup ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
+nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+
+#启动 dubbo 代理服务
+pipy dubbo-proxy.js --admin-port=6060 
+
+#启动 curl 客户端服务
 nohup java -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
+#测试
 curl 10.0.0.1:14001 -I
 curl -s 10.0.0.1:14001
 echo $(curl -s 10.0.0.1:14001)
 
 #确认调用正常后, kill 掉 s1 下的 httpbin java 进程, 用下面命令重启
-nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+#nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
 #pipy dubbo proxy 运行在 10.0.0.1:6666 即可,
 #请求转发给 10.0.0.2:6666
 #pipy 'pipy.listen(6666, $=>$.dump(">>>").connect("10.0.0.2:6666").dump("<<<"))' --log-level=debug:dump
 #pipy 'pipy.listen(6666, $=>$.dump().connect("10.0.0.2:6666"))'
 
-pipy dubbo-proxy.js --admin-port=6060 
+#pipy dubbo-proxy.js --admin-port=6060 
 #curl localhost:6060/metrics 查询 metrics
 ```
