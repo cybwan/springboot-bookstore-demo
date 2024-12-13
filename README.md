@@ -1,7 +1,9 @@
 # Dubbo Demo
 
 ```bash
+#安装 jdk
 apt install -y openjdk-8-jre-headless
+
 git clone https://github.com/cybwan/springboot-bookstore-demo.git -b demo
 cd springboot-bookstore-demo
 tar zxvf apache-zookeeper-3.6.2-bin.tar.gz
@@ -19,9 +21,14 @@ sudo ip netns exec s1 ifconfig lo up
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh start
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh status | grep 2181
 
-nohup ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+
 nohup java -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
+
 curl 10.0.0.1:14001 -I
 curl -s 10.0.0.1:14001
 echo $(curl -s 10.0.0.1:14001)
+
+
+ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
 ```
