@@ -26,19 +26,23 @@ apache-zookeeper-3.6.2-bin/bin/zkServer.sh status | grep 2181
 #启动 httpbin provider 服务
 #nohup ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
-nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+nohup ip netns exec s1 java -Xms512M -Xmx512M -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
 #启动 dubbo 代理服务
 pipy dubbo-proxy.js --admin-port=6060 
 
 #启动 curl 客户端服务
-nohup java -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
+nohup java -Xms512M -Xmx512M -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
 #测试
 curl 10.0.0.1:14001 -I
 curl -s 10.0.0.1:14001
 echo $(curl -s 10.0.0.1:14001)
+```
 
+## Ref Commands
+
+```bash
 #确认调用正常后, kill 掉 s1 下的 httpbin java 进程, 用下面命令重启
 #nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
@@ -50,3 +54,4 @@ echo $(curl -s 10.0.0.1:14001)
 #pipy dubbo-proxy.js --admin-port=6060 
 #curl localhost:6060/metrics 查询 metrics
 ```
+
