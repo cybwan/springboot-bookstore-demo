@@ -18,7 +18,7 @@ public class CurlController{
     public @ResponseBody String index() {
         // 记录开始时间
         long startTime = System.nanoTime();
-        for(int i=0;i<1000000;i++){
+        for(int i=0;i<100000;i++){
             httpbinService.hostname();
         }
         // 记录结束时间
