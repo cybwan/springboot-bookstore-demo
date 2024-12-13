@@ -19,14 +19,15 @@ sudo ip netns exec s1 ip route add default via 10.0.0.1
 sudo ip netns exec s1 ifconfig lo up
 
 #启动 zk 服务
+apache-zookeeper-3.6.2-bin/bin/zkServer.sh stop
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh start
 #确认 zk 服务
 apache-zookeeper-3.6.2-bin/bin/zkServer.sh status | grep 2181
 
 #启动 httpbin provider 服务
-#nohup ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+#nohup sudo ip netns exec s1 java -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
-nohup ip netns exec s1 java -Xms512M -Xmx512M -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
+nohup sudo ip netns exec s1 java -Xms512M -Xmx512M -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
 #启动 dubbo 代理服务
 pipy dubbo-proxy.js --admin-port=6060 
