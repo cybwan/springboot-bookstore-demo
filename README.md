@@ -33,7 +33,9 @@ nohup sudo ip netns exec s1 java -Xms512M -Xmx512M -DDUBBO_IP_TO_REGISTRY=10.0.0
 pipy dubbo-proxy.js --admin-port=6060 
 
 #启动 curl 客户端服务
-nohup java -Xms512M -Xmx512M -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
+# curl-dubbo.1.jar 十万次请求
+# curl-dubbo.jar 百万次请求
+nohup java -Xms512M -Xmx512M -jar curl-dubbo.1.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
 #测试
 curl 10.0.0.1:14001 -I
