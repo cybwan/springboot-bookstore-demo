@@ -36,4 +36,5 @@ nohup ip netns exec s1 java -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGI
 
 #pipy dubbo proxy 运行在 10.0.0.1:6666 即可,
 #请求转发给 10.0.0.2:6666
+pipy 'pipy.listen(6666, $=>$.dump().connect("10.0.0.2:6666"))'
 ```
