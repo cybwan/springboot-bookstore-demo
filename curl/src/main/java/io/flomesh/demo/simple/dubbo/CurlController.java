@@ -16,14 +16,20 @@ public class CurlController{
 
     @GetMapping("/")
     public @ResponseBody String index() {
+        int count = 10000000;
         // 记录开始时间
         long startTime = System.nanoTime();
-        for(int i=0;i<100000;i++){
+        for(int i=0;i<count;i++){
             httpbinService.hostname();
         }
         // 记录结束时间
         long  endTime = System.nanoTime();
-        return "endTime:"+endTime+ " - startTime:"+startTime +"="+(endTime-startTime);
+        return "endTime:"+endTime+ " - startTime:"+startTime +"="+(endTime-startTime) + " count:"+ count+" avg:"+)(endTime-startTime)/count)+"ns";
+    }
+
+    @GetMapping("/hostname")
+    public @ResponseBody String index() {
+        return httpbinService.hostname();
     }
 
     @DubboReference(version = "${service.version.httpbin}")
