@@ -6,6 +6,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import io.flomesh.demo.api.HttpbinService;
 
@@ -15,8 +16,10 @@ import io.flomesh.demo.api.HttpbinService;
 public class CurlController{
 
     @GetMapping("/")
-    public @ResponseBody String index() {
-        int count = 10000000;
+    public @ResponseBody String index(@RequestParam int count) {
+        if(count<1){
+            count =1;
+        }
         // 记录开始时间
         long startTime = System.nanoTime();
         for(int i=0;i<count;i++){
