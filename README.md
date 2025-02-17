@@ -32,6 +32,11 @@ nohup sudo ip netns exec s1 java -Xms512M -Xmx512M -DDUBBO_IP_TO_REGISTRY=10.0.0
 #启动 dubbo 代理服务
 pipy dubbo-proxy.js --admin-port=6060 
 
+git clone https://github.com/flomesh-io/fgw.git
+#pipy --log-level=debug fgw/src/main.js --args --config config.yaml
+pipy fgw/src/main.js --args --config config.yaml
+
+
 #启动 curl 客户端服务
 # curl-dubbo.1.jar 十万次请求
 # curl-dubbo.jar 百万次请求
@@ -56,5 +61,15 @@ echo $(curl -s 10.0.0.1:14001)
 
 #pipy dubbo-proxy.js --admin-port=6060 
 #curl localhost:6060/metrics 查询 metrics
+
+endTime:847743039620  -  startTime:816926671097=30816368523
+endTime:1657876107191 - startTime:1627374465979=30501641212
+endTime:1907307705895 - startTime:1883426785401=23880920494
+
+
+
+Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.apache.dubbo.rpc.RpcException: Failed to invoke the method hostname in the service io.flomesh.demo.api.HttpbinService. Tried 3 times of the providers [10.0.0.1:6666] (1/1) from the registry 10.0.0.1:2181 on the consumer 10.0.0.1 using the dubbo version 2.7.23. Last error is: Invoke remote method timeout. method: hostname, provider: 
+
+dubbo://10.0.0.1:6666/io.flomesh.demo.api.HttpbinService?anyhost=true&application=curl&check=false&deprecated=false&dubbo=2.0.2&dynamic=true&generic=false&init=false&interface=io.flomesh.demo.api.HttpbinService&metadata-type=remote&methods=hostname&pid=1967&qos.enable=false&register.ip=10.0.0.1&release=2.7.23&remote.application=curl&revision=0.0.1-SNAPSHOT&service.name=ServiceBean:/io.flomesh.demo.api.HttpbinService:v1&side=consumer&sticky=false&timestamp=1739792202604&version=v1, cause: org.apache.dubbo.remoting.TimeoutException: Waiting server-side response timeout by scan timer. start time: 2025-02-17 12:07:10.204, end time: 2025-02-17 12:07:11.222, client elapsed: 0 ms, server elapsed: 1018 ms, timeout: 1000 ms, request: Request [id=632751, version=2.0.2, twoway=true, event=false, broken=false, data=null], channel: /10.0.0.1:60034 -> /10.0.0.1:6666] with root cause
 ```
 
