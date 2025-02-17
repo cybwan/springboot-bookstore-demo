@@ -39,9 +39,13 @@ pipy fgw/src/main.js --args --config fgw.config.yaml
 
 
 #启动 curl 客户端服务
-# curl-dubbo.jar 百万次请求
 nohup java -Xms512M -Xmx512M -jar curl-dubbo.1.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
 #测试
-echo $(curl -s 10.0.0.1:14001)
+echo $(curl -s 10.0.0.1:14001/hostname)
+echo $(curl -s 10.0.0.1:14001?count=1)
+#十万次请求
+echo $(curl -s 10.0.0.1:14001?count=100000)
+#百万次请求
+echo $(curl -s 10.0.0.1:14001?count=1000000)
 ```
