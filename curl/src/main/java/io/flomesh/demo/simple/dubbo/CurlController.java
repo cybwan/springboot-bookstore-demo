@@ -24,7 +24,7 @@ public class CurlController{
         }
         // 记录结束时间
         long  endTime = System.nanoTime();
-        return "endTime:"+endTime+ " - startTime:"+startTime +"="+(endTime-startTime) + " count:"+ count+" avg:"+)(endTime-startTime)/count)+"ns";
+        return "endTime:"+endTime+ " - startTime:"+startTime +"="+(endTime-startTime) + " count:"+ count+" avg:"+ (endTime-startTime)/count)+"ns";
     }
 
     @GetMapping("/hostname")

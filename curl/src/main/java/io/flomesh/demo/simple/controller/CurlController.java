@@ -22,7 +22,6 @@ public class CurlController {
 
     @GetMapping("/")
     public @ResponseBody String index() {
-        log.info("index() is called");
         return client.index();
     }
 }
