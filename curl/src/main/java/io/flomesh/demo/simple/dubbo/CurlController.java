@@ -28,7 +28,7 @@ public class CurlController{
     }
 
     @GetMapping("/hostname")
-    public @ResponseBody String index() {
+    public @ResponseBody String hostname() {
         return httpbinService.hostname();
     }
 
