@@ -1,0 +1,48 @@
+resources:
+- kind: Gateway
+  metadata:
+    name: test
+  spec:
+    listeners:
+      - name: test
+        port: 6666
+        protocol: Dubbo
+
+- kind: DubboRoute
+  spec:
+    parentRefs:
+      - kind: Gateway
+        name: test
+        sectionName: test
+    rules:
+      - matches:
+        - type: Exact
+          service: io.flomesh.demo.simple.dubbo.HttpbinServiceProvider
+          version: v1
+          method: hostname
+          signature: I
+        backendRefs:
+          - kind: Backend
+            name: test-svc-1
+      - matches:
+        - type: RegularExpression
+          service: .*
+        backendRefs:
+          - kind: Backend
+            name: test-svc-2
+
+- kind: Backend
+  metadata:
+    name: test-svc-1
+  spec:
+    targets:
+      - address: 10.0.0.2
+        port: 6666
+
+- kind: Backend
+  metadata:
+    name: test-svc-2
+  spec:
+    targets:
+      - address: 10.0.0.2
+        port: 6666
