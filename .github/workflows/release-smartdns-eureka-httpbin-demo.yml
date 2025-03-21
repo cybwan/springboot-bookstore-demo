@@ -1,5 +1,10 @@
 name: Release smartdns-eureka-httpbin-demo
 
+on:
+  push:
+    branches:
+      - smartdns-eureka-httpbin-demo
+
 jobs:
   version:
     name: Set Version from git ref
