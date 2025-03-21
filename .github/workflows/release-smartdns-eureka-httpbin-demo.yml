@@ -1,9 +1,9 @@
-name: Release smartdns-eureka-httpbin-demo
+name: Release smartdns-nacos-httpbin-demo
 
 on:
   push:
     branches:
-      - smartdns-eureka-httpbin-demo
+      - smartdns-nacos-httpbin-demo
 
 jobs:
   version:
@@ -41,7 +41,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v5.7.0
         with:
-          images: ${{ secrets.RELEASE_REGISTRY }}/smartdns-eureka-httpbin-demo
+          images: ${{ secrets.RELEASE_REGISTRY }}/smartdns-nacos-httpbin-demo
           tags: latest
 
       - name: Build and Push

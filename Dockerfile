@@ -4,9 +4,8 @@ COPY . .
 
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.28.0/opentelemetry-javaagent.jar .
 
-RUN --mount=type=cache,target=/root/.m2 mvn clean package -P eureka
-RUN mv /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar httpbin-eureka.jar
-
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -P nacos
+RUN mv /app/httpbin/target/httpbin-0.0.1-SNAPSHOT.jar httpbin-nacos.jar
 FROM openjdk:8-jre-alpine
 
 WORKDIR /

@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: nacos
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVICE_URL}
+        username: nacos
+        password: nacos
