@@ -1,8 +1,4 @@
-name: Release
-on:
-  push:
-    tags:
-      - "v*.*.*"
+name: Release smartdns-eureka-httpbin-demo
 
 jobs:
   version:
@@ -40,7 +36,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v5.3.0
         with:
-          images: ${{ secrets.RELEASE_REGISTRY }}/springboot-demo
+          images: ${{ secrets.RELEASE_REGISTRY }}/smartdns-eureka-httpbin-demo-1
           tags: |
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}.{{minor}}.{{patch}}

@@ -4,14 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>bookbuyer</module>
-        <module>bookstore</module>
-        <module>bookthief</module>
-        <module>bookwarehouse</module>
-        <module>common</module>
         <module>httpbin</module>
-        <module>curl</module>
-        <module>grpc-lib</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

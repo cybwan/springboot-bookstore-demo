@@ -7,4 +7,4 @@ CTR_TAG      ?= latest
 
 .PHONY: docker-build
 docker-build:
-	docker buildx build --builder fsm --platform=$(DOCKER_BUILDX_PLATFORM) -o $(DOCKER_BUILDX_OUTPUT) -t $(CTR_REGISTRY)/springboot-demo:$(CTR_TAG) -f Dockerfile .
+	docker buildx build --builder fsm --platform=$(DOCKER_BUILDX_PLATFORM) -o $(DOCKER_BUILDX_OUTPUT) -t $(CTR_REGISTRY)/smartdns-eureka-httpbin-demo-1:$(CTR_TAG) -f Dockerfile .
