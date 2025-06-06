@@ -29,17 +29,19 @@ apache-zookeeper-3.6.2-bin/bin/zkServer.sh status | grep 2181
 
 nohup sudo ip netns exec s1 java -Xms512M -Xmx512M -DDUBBO_IP_TO_REGISTRY=10.0.0.1 -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.httpbin.out 2>&1 &
 
+cd ..
+
 #启动 TCP 代理服务
-#pipy dubbo-proxy.js --admin-port=6060 
+#pipy springboot-bookstore-demo/dubbo-proxy.js --admin-port=6060 
 
 #启动 fgw dubbo 代理服务
 git clone https://github.com/flomesh-io/fgw.git
-#pipy --log-level=debug fgw/src/main.js --args --config config.yaml
-pipy fgw/src/main.js --args --config fgw.config.yaml
+#pipy --log-level=debug fgw/src/main.js --args --config springboot-bookstore-demo/config.yaml
+pipy fgw/src/main.js --args --config springboot-bookstore-demo/fgw.config.yaml
 
 
 #启动 curl 客户端服务
-nohup java -Xms512M -Xmx512M -jar curl-dubbo.1.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
+nohup java -Xms512M -Xmx512M -jar springboot-bookstore-demo/curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
 #测试
 echo $(curl -s 10.0.0.1:14001/hostname)
