@@ -21,7 +21,7 @@ public class CurlController{
 
     private static final AtomicLong escapeTime = new AtomicLong(0);
 
-    @GetMapping("/")
+    @GetMapping("/meter")
     public @ResponseBody String meter(@RequestParam int n,@RequestParam int c) throws InterruptedException {
         if(n<1){
             n =1;
