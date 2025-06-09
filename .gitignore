@@ -33,3 +33,8 @@ dist/
 
 ### VS Code ###
 .vscode/
+
+### fgw ###
+fgw/
+apache-zookeeper-3.6.2-bin/
+*.out
