@@ -48,8 +48,10 @@ nohup java -Xms512M -Xmx512M -jar springboot-bookstore-demo/curl-dubbo.jar --spr
 #测试
 echo $(curl -s 10.0.0.1:14001/hostname)
 echo $(curl -s 10.0.0.1:14001?count=1)
+echo $(curl -s 10.0.0.1:14001/meter?n=1\&c=1)
 #十万次请求
 echo $(curl -s 10.0.0.1:14001?count=100000)
+echo $(curl -s 10.0.0.1:14001/meter?n=100000\&c=10)
 #百万次请求
 echo $(curl -s 10.0.0.1:14001?count=1000000)
 ```
