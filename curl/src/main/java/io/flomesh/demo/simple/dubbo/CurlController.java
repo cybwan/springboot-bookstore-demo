@@ -19,31 +19,22 @@ import java.util.concurrent.atomic.AtomicLong;
 @Profile("dubbo")
 public class CurlController{
 
-    private static final AtomicLong escapeTime = new AtomicLong(0);
-
     @GetMapping("/meter")
-    public @ResponseBody String meter(@RequestParam int n,@RequestParam int c) throws InterruptedException {
-        if(n<1){
-            n =1;
+    public @ResponseBody String meter(@RequestParam(name = "n") int totalRequests,@RequestParam(name = "c") int concurrencyLevel)  {
+        if(totalRequests<1){
+            totalRequests =1;
         }
-        if(c<1){
-            c =1;
+        if(concurrencyLevel<1){
+            concurrencyLevel =1;
         }
-        int totalRequests =n;
-        int concurrencyLevel =c;
+
+        AtomicLong escapeTime = new AtomicLong(0);
         ExecutorService threadPool = Executors.newFixedThreadPool(concurrencyLevel);
         CountDownLatch latch = new CountDownLatch(concurrencyLevel);
 
         // 每个线程执行 (totalRequests / concurrencyLevel) 次请求
         int requestPerThread = totalRequests / concurrencyLevel;
         totalRequests =requestPerThread*concurrencyLevel;
-
-        //warmup
-        for(int i=0;i<5;i++){
-            httpbinService.hostname();
-        }
-
-        Thread.sleep(5000); // 等待1秒钟，确保warmup完成
 
         for (int i = 0; i < concurrencyLevel; i++) {
             threadPool.execute(() -> {
@@ -63,12 +54,17 @@ public class CurlController{
         }
 
         // 等待所有线程完成
-        latch.await();
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            log.error("Thread interrupted", e);
+        }
+
         threadPool.shutdown();
         return "totalRequests: " + totalRequests +
                 ", concurrencyLevel: " + concurrencyLevel +
                 ", totalTime: " + escapeTime.get() +
-                " ns, avgTime: " + (escapeTime.get() / totalRequests) + " ns";
+                "ns, avg: " + (escapeTime.get() / totalRequests) + "ns";
     }
 
     @GetMapping("/")
