@@ -5,6 +5,17 @@ dubbo:
   enabled: true
   scan:
     base-packages: io.flomesh.demo.simple.dubbo
+  consumer:
+    loadbalance: "roundrobin"     # 最少活跃调用
+    connections: 50               # 每个节点50个连接
+    actives: 1000                 # 每个方法最大并行数
+    corethreads: 100              # 线程池核心大小
+    threads: 500                  # 最大线程数
+    queues: 0                     # 不排队直接拒绝
+  protocol:
+    name: dubbo
+    dispatcher: all               # 请求分发所有线程
+    threadpool: eager              # 优先创建线程
 
 grpc:
   server:

@@ -87,6 +87,6 @@ public class CurlController{
         return httpbinService.hostname();
     }
 
-    @DubboReference(version = "${service.version.httpbin}")
+    @DubboReference(version = "v1")
     private HttpbinService httpbinService;
 }
