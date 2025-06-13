@@ -2,7 +2,8 @@
 
 ```bash
 #安装 jdk
-apt install -y openjdk-8-jre-headless
+sudo apt update
+sudo apt install -y openjdk-8-jre-headless
 
 git clone https://github.com/cybwan/springboot-bookstore-demo.git -b demo
 tar zxvf springboot-bookstore-demo/apache-zookeeper-3.6.2-bin.tar.gz
@@ -56,4 +57,30 @@ echo $(curl -s 10.0.0.1:14001?count=100000)
 echo $(curl -s 10.0.0.1:14001/meter?n=100000\&c=10)
 #百万次请求
 echo $(curl -s 10.0.0.1:14001?count=1000000)
+
+
+sudo java  -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.22.1.11  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+
+sudo java -Xms8G -Xmx8G -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=8 -XX:+UseG1GC -Ddubbo.netty.preferDirect=true -Ddubbo.memory.watermark.high=0.7 -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev 
+
+echo $(curl -s localhost:14001/meter?n=1000000\&c=512)
+
+echo $(curl -s localhost:14001/meter?n=100000\&c=32)
+curl -s localhost:14001/meter?n=10\&c=512
+
+
+sudo java  -Xms4G -Xmx4G -Xss256k -DDUBBO_IP_TO_REGISTRY=192.168.226.5  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+
+
+pipy --admin-port=6060  fgw/src/main.js --reuse-port --threads=4 --args --config dubbo-route.yaml
+
+pipy 'pipy.listen(6666, $=>$.connect("10.0.0.2:6666"))' --admin-port=6060 --threads=4 --reuse-ports
+
+curl localhost:6060/dump/inbound+outbound
+
+sudo ip netns exec s1 java  -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.22.1.11  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+
+sudo java  -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.22.1.11  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+
+pipy 'pipy.listen(6666, $=>$.connect("10.0.0.2:6666"))' --admin-port=6060 --threads=4 --reuse-port
 ```
