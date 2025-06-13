@@ -43,6 +43,8 @@ pipy --log-level=debug fgw/src/main.js --args --config springboot-bookstore-demo
 
 
 #启动 curl 客户端服务
+export SPRING_CONFIG_LOCATION=file:///root/springboot-bookstore-demo/config/
+
 nohup java -Xms512M -Xmx512M -jar springboot-bookstore-demo/curl-dubbo.jar --spring.profiles.active=dubbo,dev >nohup.curl.out 2>&1 &
 
 #测试
