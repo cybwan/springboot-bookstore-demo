@@ -17,7 +17,7 @@ dubbo:
 ---
 # Prod Profile Configuration
 server:
-  port: 14001
+  port: 14002
 spring:
   config:
     activate:

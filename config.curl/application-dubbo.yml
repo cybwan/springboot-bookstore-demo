@@ -6,7 +6,7 @@ dubbo:
   scan:
     base-packages: io.flomesh.demo.simple.dubbo
   registry:
-    address: zookeeper://10.0.0.1:2181
+    address: zookeeper://127.0.0.1:2181
   protocol:
     port: 20880
     name: dubbo
@@ -14,7 +14,7 @@ dubbo:
     threadpool: eager              # 优先创建线程
   consumer:
     loadbalance: "roundrobin"
-    connections: 50               # 每个节点50个连接
+    connections: 16               # 每个节点50个连接
     actives: 1000                 # 每个方法最大并行数
     corethreads: 100              # 线程池核心大小
     threads: 500                  # 最大线程数

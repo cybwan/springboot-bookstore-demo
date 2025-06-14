@@ -6,7 +6,7 @@ dubbo:
   scan:
     base-packages: io.flomesh.demo.simple.dubbo
   registry:
-    address: zookeeper://10.0.0.1:2181
+    address: zookeeper://127.0.0.1:2181
 grpc:
   server:
     port: -1 #disable grpc server
