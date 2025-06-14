@@ -83,4 +83,11 @@ sudo ip netns exec s1 java  -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.
 sudo java  -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.22.1.11  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
 
 pipy 'pipy.listen(6666, $=>$.connect("10.0.0.2:6666"))' --admin-port=6060 --threads=4 --reuse-port
+
+XMS=8G XMX=8G make start-curl
+
+#测试
+echo $(curl -s 127.0.0.1:14001/hostname)
+
+echo $(curl -s 127.0.0.1:14001/qps?q=1000\&d=5\&c=8)
 ```
