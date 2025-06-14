@@ -1,6 +1,6 @@
 service:
   version:
-    curl: v1
+    httpbin: v1
 dubbo:
   enabled: true
   scan:
