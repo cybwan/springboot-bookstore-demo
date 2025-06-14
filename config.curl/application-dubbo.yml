@@ -6,7 +6,7 @@ dubbo:
   scan:
     base-packages: io.flomesh.demo.simple.dubbo
   registry:
-    address: zookeeper://127.0.0.1:2181
+    address: zookeeper://zk.local:2181
   protocol:
     port: 20880
     name: dubbo
