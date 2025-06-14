@@ -23,10 +23,11 @@ public class CurlController {
 
 	@GetMapping("/qps")
 	public @ResponseBody String qps(@RequestParam(name = "q") int targetQps,
-			@RequestParam(name = "d") int durationSeconds, @RequestParam(name = "c") int concurrencyLevel) {
+			@RequestParam(name = "c") int concurrencyLevel) {
 		AtomicLong escapeTime = new AtomicLong(0);
 		AtomicLong totalRequests = new AtomicLong(0);
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(concurrencyLevel);
+		CountDownLatch latch = new CountDownLatch(targetQps);
 
 		// 计算每次请求间隔（纳秒）
 		long intervalNanos = TimeUnit.SECONDS.toNanos(1) / targetQps;
@@ -41,6 +42,8 @@ public class CurlController {
 				escapeTime.addAndGet(endTime - startTime);
 				totalRequests.incrementAndGet();
 			} catch (Exception ignored) {
+			} finally {
+				latch.countDown();
 			}
 		};
 
@@ -49,12 +52,21 @@ public class CurlController {
 			scheduler.scheduleAtFixedRate(requestTask, i * intervalNanos, intervalNanos, TimeUnit.NANOSECONDS);
 		}
 
-		// 打印实时QPS
-		scheduler.scheduleAtFixedRate(() -> System.out.println("Current QPS: " + totalRequests.getAndSet(0)), 1, 1,
-				TimeUnit.SECONDS);
+		// // 打印实时QPS
+		// scheduler.scheduleAtFixedRate(() -> System.out.println("Current QPS: " + totalRequests.getAndSet(0)), 1, 1,
+		// 		TimeUnit.SECONDS);
 
 		// 自动停止
-		scheduler.schedule(() -> scheduler.shutdownNow(), durationSeconds, TimeUnit.SECONDS);
+		scheduler.schedule(() -> scheduler.shutdownNow(), 30, TimeUnit.SECONDS);
+
+		// 等待所有请求完成
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+      log.error("Thread interrupted", e);
+		}
+
+		scheduler.shutdownNow();
 
 		return "totalRequests: " + totalRequests.get() + ", concurrencyLevel: " + concurrencyLevel + ", totalTime: "
 		+ escapeTime.get() + "ns, avg: " + (escapeTime.get() / totalRequests.get()) + "ns";
