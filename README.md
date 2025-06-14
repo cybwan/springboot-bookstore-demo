@@ -72,7 +72,7 @@ curl -s localhost:14001/meter?n=10\&c=512
 sudo java  -Xms4G -Xmx4G -Xss256k -DDUBBO_IP_TO_REGISTRY=192.168.226.5  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
 
 
-pipy --admin-port=6060  fgw/src/main.js --reuse-port --threads=4 --args --config dubbo-route.yaml
+pipy --admin-port=6060  fgw/src/main.js --reuse-port --threads=max --args --config dubbo-route.yaml
 
 pipy 'pipy.listen(6666, $=>$.connect("10.0.0.2:6666"))' --admin-port=6060 --threads=4 --reuse-ports
 

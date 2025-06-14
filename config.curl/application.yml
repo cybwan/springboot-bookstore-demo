@@ -6,7 +6,7 @@ spring:
     name: curl
 logging:
   level:
-    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
 management:
   endpoints:
     web:

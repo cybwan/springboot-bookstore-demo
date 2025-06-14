@@ -29,5 +29,5 @@ resources:
       name: httpbin-service-v1
     spec:
       targets:
-        - address: 10.0.0.2
+        - address: 127.0.0.1
           port: 666

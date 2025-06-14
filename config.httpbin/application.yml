@@ -3,10 +3,10 @@ spring:
     default:
       - "dubbo"
   application:
-    name: curl
+    name: httpbin
 logging:
   level:
-    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
 management:
   endpoints:
     web:
