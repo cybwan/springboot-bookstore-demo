@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 @Controller
 @Slf4j
@@ -24,15 +26,21 @@ public class CurlController {
 	@GetMapping("/qps")
 	public @ResponseBody String qps(@RequestParam(name = "q") int targetQps,
 			@RequestParam(name = "c") int concurrencyLevel) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		AtomicLong escapeTime = new AtomicLong(0);
 		AtomicLong totalRequests = new AtomicLong(0);
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(concurrencyLevel);
 		CountDownLatch latch = new CountDownLatch(targetQps);
 
+		int durationSeconds = 1;
+
 		// 计算每次请求间隔（纳秒）
 		long intervalNanos = TimeUnit.SECONDS.toNanos(1) / targetQps;
 
 		Runnable requestTask = () -> {
+			Date requestDate = new Date();
+			String requestTime = sdf.format(requestDate);
+			System.out.println("请求时间：" + requestTime);
 			try {
 				// 记录开始时间
 				long startTime = System.nanoTime();
@@ -47,29 +55,31 @@ public class CurlController {
 			}
 		};
 
-		// 启动请求发射器
-		for (int i = 0; i < targetQps; i++) {
-			scheduler.scheduleAtFixedRate(requestTask, i * intervalNanos, intervalNanos, TimeUnit.NANOSECONDS);
-		}
+		Date beginDate = new Date();
+		String beginTime = sdf.format(beginDate);
+		System.out.println("任务开始时间：" + beginTime);
 
-		// // 打印实时QPS
-		// scheduler.scheduleAtFixedRate(() -> System.out.println("Current QPS: " + totalRequests.getAndSet(0)), 1, 1,
-		// 		TimeUnit.SECONDS);
+		// 启动请求发射器
+		scheduler.scheduleAtFixedRate(requestTask, 0, intervalNanos, TimeUnit.NANOSECONDS);
 
 		// 自动停止
-		scheduler.schedule(() -> scheduler.shutdownNow(), 30, TimeUnit.SECONDS);
+		scheduler.schedule(() -> scheduler.shutdownNow(), durationSeconds, TimeUnit.SECONDS);
 
 		// 等待所有请求完成
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
-      log.error("Thread interrupted", e);
+//			log.error("Thread interrupted", e);
 		}
 
 		scheduler.shutdownNow();
 
+		Date endDate = new Date();
+		String endTime = sdf.format(endDate);
+		System.out.println("任务结束时间：" + endTime);
+
 		return "totalRequests: " + totalRequests.get() + ", concurrencyLevel: " + concurrencyLevel + ", totalTime: "
-		+ escapeTime.get() + "ns, avg: " + (escapeTime.get() / totalRequests.get()) + "ns";
+				+ escapeTime.get() + "ns, avg: " + (escapeTime.get() / totalRequests.get()) + "ns";
 	}
 
 	@GetMapping("/meter")
@@ -111,7 +121,7 @@ public class CurlController {
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
-            log.error("Thread interrupted", e);
+//			log.error("Thread interrupted", e);
 		}
 
 		threadPool.shutdown();
