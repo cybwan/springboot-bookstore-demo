@@ -59,7 +59,7 @@ echo $(curl -s 10.0.0.1:14001/meter?n=100000\&c=10)
 echo $(curl -s 10.0.0.1:14001?count=1000000)
 
 
-sudo java  -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.22.1.11  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
+sudo java -Xms16G -Xmx16G -Xss256k -DDUBBO_IP_TO_REGISTRY=172.22.1.11  -DDUBBO_PORT_TO_REGISTRY=6666 -jar httpbin-dubbo.jar --spring.profiles.active=dubbo,dev
 
 sudo java -Xms8G -Xmx8G -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=8 -XX:+UseG1GC -Ddubbo.netty.preferDirect=true -Ddubbo.memory.watermark.high=0.7 -jar curl-dubbo.jar --spring.profiles.active=dubbo,dev 
 
