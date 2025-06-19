@@ -21,6 +21,8 @@ sudo sed -i '/.*swap/d' /etc/fstab
 sudo systemctl stop firewalld
 sudo systemctl disable firewalld
 
+sudo sed -i 's/SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+
 mkdir /iso
 cat >> /etc/fstab <<EOF
 /dev/sr0 /iso iso9660 defaults 0 0

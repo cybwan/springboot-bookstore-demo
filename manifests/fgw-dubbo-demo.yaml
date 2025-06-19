@@ -7,7 +7,7 @@ data:
   dubbo-client.js: |
     var TARGET = 'localhost:6666'
     var DURATION = 10
-    var RATE = 1000
+    var RATE = 3100
     var CONCURRENCY = 8
 
     function test({ target, duration, rate, concurrency }) {
