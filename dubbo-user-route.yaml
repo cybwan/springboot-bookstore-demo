@@ -17,9 +17,9 @@ resources:
       rules:
         - matches:
             - type: Exact
-              service: io.flomesh.demo.api.HttpbinService
+              service: org.apache.dubbo.sample.UserProvider
               version: v1
-              method: hostname
+              method: getUser
           backendRefs:
             - kind: Backend
               name: httpbin-service-v1
@@ -30,4 +30,4 @@ resources:
     spec:
       targets:
         - address: 127.0.0.1
-          port: 6666
+          port: 20880
