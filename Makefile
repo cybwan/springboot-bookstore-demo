@@ -61,3 +61,15 @@ start-curl:
 start-fgw: fgw
 	@ulimit -n 65536
 	@pipy --admin-port=6060  fgw/src/main.js --reuse-port --threads=max --args --config dubbo-route.yaml
+
+CTR_REGISTRY ?= cybwan
+CTR_TAG      ?= latest
+DOCKER_BUILDX_OUTPUT ?= type=registry
+DOCKER_BUILDX_PLATFORM ?= linux/amd64
+
+.PHONY: docker-build-fgw-dubbo-demo
+docker-build-fgw-dubbo-demo:
+	docker buildx build --builder fsm --platform=$(DOCKER_BUILDX_PLATFORM) -o $(DOCKER_BUILDX_OUTPUT) -t $(CTR_REGISTRY)/fgw-dubbo-demo:$(CTR_TAG) -f Dockerfile.demo .
+
+docker-build-cross-fgw-dubbo-demo: DOCKER_BUILDX_PLATFORM=linux/amd64,linux/arm64
+docker-build-cross-fgw-dubbo-demo: docker-build-fgw-dubbo-demo
