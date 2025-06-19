@@ -156,6 +156,13 @@ spec:
             "--threads=max",
             "--reuse-port",
           ]
+          #resources:
+          #  requests:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          #  limits:
+          #    cpu: "2"
+          #    memory: "2Gi"
           volumeMounts:
             - mountPath: /demo
               name: server
