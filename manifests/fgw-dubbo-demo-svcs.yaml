@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fgw-dubbo-demo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fgw-dubbo-server
+  labels:
+    app: fgw-dubbo-server
+    service: fgw-dubbo-server
+spec:
+  ports:
+    - port: 20880
+      targetPort: 20880
+  selector:
+    app: fgw-dubbo-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fgw-dubbo-route
+  labels:
+    app: fgw-dubbo-route
+    service: fgw-dubbo-route
+spec:
+  ports:
+    - port: 6666
+      targetPort: 6666
+  selector:
+    app: fgw-dubbo-route
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fgw-dubbo-client
+  labels:
+    app: fgw-dubbo-client
+    service: fgw-dubbo-client
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: fgw-dubbo-client

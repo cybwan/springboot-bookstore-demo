@@ -1,0 +1,272 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fgw-dubbo-demo
+data:
+  dubbo-client.js: |
+    var TARGET = 'localhost:6666'
+    var DURATION = 10
+    var RATE = 50000
+    var CONCURRENCY = 8
+
+    function test({ target, duration, rate, concurrency }) {
+      var sessionIndex = 0
+      var requestCount = 0
+      var requestLatency = 0
+
+      var $time
+
+      var send = pipeline($=>$
+        .onStart(req => req)
+        .handleMessageStart(() => {
+          $time = pipy.performance.now()
+        })
+        .muxQueue(() => (sessionIndex++ % concurrency)).to($=>$
+          .encodeDubbo()
+          .connect(target)
+          .decodeDubbo()
+        )
+        .replaceMessage(() => {
+          requestLatency += pipy.performance.now() - $time
+          requestCount++
+          return new StreamEnd
+        })
+      )
+
+      var msg = new Message({}, Hessian.encode([
+        '2.0.2',
+        'org.apache.dubbo.sample.UserProvider',
+        'v1',
+        'getUser',
+        'I',
+      ]))
+
+      var startTime = 0
+      var done = false
+
+      function fire() {
+        if (!startTime) startTime = Date.now()
+        new Timeout(1 / rate).wait().then(() => {
+          send.spawn(msg)
+          if (!done) fire()
+        })
+      }
+
+      fire()
+
+      return new Timeout(duration).wait().then(() => {
+        var totalTime = (Date.now() - startTime) / 1000
+        done = true
+        return {
+          totalTime,
+          requestCount,
+          requestLatency,
+        }
+      })
+    }
+
+    pipy.listen(8080, $=>$
+      .serveHTTP(req => {
+        var q = new URL(req.head.path).searchParams
+        return test({
+          target: q.get('target') || TARGET,
+          duration: Number.parseInt(q.get('duration') || DURATION),
+          rate: Number.parseInt(q.get('rate') || RATE),
+          concurrency: Number.parseInt(q.get('concurrency') || CONCURRENCY),
+        }).then(r => new Message([
+          `Total requests: ${r.requestCount} in ${r.totalTime}s`,
+          `Request rate: ${r.requestCount / r.totalTime}req/s`,
+          `Avg. latency: ${r.requestLatency / r.requestCount}ms`,
+          ''
+        ].join('\n')))
+      })
+    )
+  dubbo-server.js: |
+    pipy.listen(20880, $=>$
+      .decodeDubbo()
+      .replaceMessage(
+        (req) => new Message(
+          req.head,
+          Hessian.encode(['hello'])
+        )
+      )
+      .encodeDubbo()
+    )
+  dubbo-route.yaml: |
+    resources:
+      - kind: Gateway
+        metadata:
+          name: test
+        spec:
+          listeners:
+            - name: test
+              port: 6666
+              protocol: Dubbo
+
+      - kind: DubboRoute
+        spec:
+          parentRefs:
+            - kind: Gateway
+              name: test
+              sectionName: test
+          rules:
+            - matches:
+                - type: Exact
+                  service: org.apache.dubbo.sample.UserProvider
+                  version: v1
+                  method: getUser
+              backendRefs:
+                - kind: Backend
+                  name: httpbin-service-v1
+
+      - kind: Backend
+        metadata:
+          name: httpbin-service-v1
+        spec:
+          targets:
+            - address: 127.0.0.1
+              port: 20880
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fgw-dubbo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fgw-dubbo-server
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fgw-dubbo-server
+        version: v1
+    spec:
+      containers:
+        - name: server
+          image: cybwan/fgw-dubbo-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 20880
+          command: ['pipy']
+          args: [
+            "demo/dubbo-server.js",
+            "--threads=max",
+            "--reuse-port",
+          ]
+          #resources:
+          #  requests:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          #  limits:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          volumeMounts:
+            - mountPath: /demo
+              name: server
+      volumes:
+        - name: server
+          configMap:
+            name: fgw-dubbo-demo
+            items:
+              - key: "dubbo-server.js"
+                path: "dubbo-server.js"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fgw-dubbo-route
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fgw-dubbo-route
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fgw-dubbo-route
+        version: v1
+    spec:
+      containers:
+        - name: fgw
+          image: cybwan/fgw-dubbo-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6666
+            - containerPort: 6060
+          command: ['pipy']
+          args: [
+            "--admin-port=6060",
+            "fgw/src/main.js",
+            "--threads=max",
+            "--reuse-port",
+            "--args",
+            "--config",
+            "demo/dubbo-route.yaml",
+          ]
+          #resources:
+          #  requests:
+          #    cpu: "2"
+          #    memory: "2Gi"
+          #  limits:
+          #    cpu: "2"
+          #    memory: "2Gi"
+          volumeMounts:
+            - mountPath: /demo
+              name: route
+      volumes:
+        - name: route
+          configMap:
+            name: fgw-dubbo-demo
+            items:
+              - key: "dubbo-route.yaml"
+                path: "dubbo-route.yaml"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fgw-dubbo-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fgw-dubbo-client
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fgw-dubbo-client
+        version: v1
+    spec:
+      containers:
+        - name: client
+          image: cybwan/fgw-dubbo-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          command: ['pipy']
+          args: [
+            "demo/dubbo-client.js",
+            "--threads=max",
+            "--reuse-port",
+          ]
+          #resources:
+          #  requests:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          #  limits:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          volumeMounts:
+            - mountPath: /demo
+              name: client
+      volumes:
+        - name: client
+          configMap:
+            name: fgw-dubbo-demo
+            items:
+              - key: "dubbo-client.js"
+                path: "dubbo-client.js"
