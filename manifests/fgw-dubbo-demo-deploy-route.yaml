@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fgw-dubbo-route
+data:
+  dubbo-route.yaml: |
+    resources:
+      - kind: Gateway
+        metadata:
+          name: test
+        spec:
+          listeners:
+            - name: test
+              port: 6666
+              protocol: Dubbo
+
+      - kind: DubboRoute
+        spec:
+          parentRefs:
+            - kind: Gateway
+              name: test
+              sectionName: test
+          rules:
+            - matches:
+                - type: Exact
+                  service: org.apache.dubbo.sample.UserProvider
+                  version: v1
+                  method: getUser
+              backendRefs:
+                - kind: Backend
+                  name: httpbin-service-v1
+
+      - kind: Backend
+        metadata:
+          name: httpbin-service-v1
+        spec:
+          targets:
+            - address: 127.0.0.1
+              port: 20880
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fgw-dubbo-route
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fgw-dubbo-route
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fgw-dubbo-route
+        version: v1
+    spec:
+      containers:
+        - name: fgw
+          image: cybwan/fgw-dubbo-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6666
+            - containerPort: 6060
+          command: ['pipy']
+          args: [
+            "--admin-port=6060",
+            "fgw/src/main.js",
+            "--threads=max",
+            "--reuse-port",
+            "--args",
+            "--config",
+            "demo/dubbo-route.yaml",
+          ]
+          #resources:
+          #  requests:
+          #    cpu: "2"
+          #    memory: "2Gi"
+          #  limits:
+          #    cpu: "2"
+          #    memory: "2Gi"
+          volumeMounts:
+            - mountPath: /demo
+              name: route
+      volumes:
+        - name: route
+          configMap:
+            name: fgw-dubbo-route
+            items:
+              - key: "dubbo-route.yaml"
+                path: "dubbo-route.yaml"

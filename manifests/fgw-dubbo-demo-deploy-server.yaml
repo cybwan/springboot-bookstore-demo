@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fgw-dubbo-server
+data:
+  dubbo-server.js: |
+    pipy.listen(20880, $=>$
+      .decodeDubbo()
+      .replaceMessage(
+        (req) => new Message(
+          req.head,
+          Hessian.encode(['hello'])
+        )
+      )
+      .encodeDubbo()
+    )
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fgw-dubbo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fgw-dubbo-server
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fgw-dubbo-server
+        version: v1
+    spec:
+      containers:
+        - name: server
+          image: cybwan/fgw-dubbo-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 20880
+          command: ['pipy']
+          args: [
+            "demo/dubbo-server.js",
+            "--threads=max",
+            "--reuse-port",
+          ]
+          #resources:
+          #  requests:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          #  limits:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          volumeMounts:
+            - mountPath: /demo
+              name: server
+      volumes:
+        - name: server
+          configMap:
+            name: fgw-dubbo-server
+            items:
+              - key: "dubbo-server.js"
+                path: "dubbo-server.js"
