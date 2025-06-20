@@ -161,8 +161,8 @@ spec:
           #    cpu: "1"
           #    memory: "1Gi"
           #  limits:
-          #    cpu: "2"
-          #    memory: "2Gi"
+          #    cpu: "1"
+          #    memory: "1Gi"
           volumeMounts:
             - mountPath: /demo
               name: server
@@ -182,6 +182,13 @@ spec:
             "--config",
             "demo/dubbo-route.yaml",
           ]
+          resources:
+            requests:
+              cpu: "2"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
           volumeMounts:
             - mountPath: /demo
               name: route
@@ -196,6 +203,13 @@ spec:
             "--threads=max",
             "--reuse-port",
           ]
+          #resources:
+          #  requests:
+          #    cpu: "1"
+          #    memory: "1Gi"
+          #  limits:
+          #    cpu: "1"
+          #    memory: "1Gi"
           volumeMounts:
             - mountPath: /demo
               name: client
