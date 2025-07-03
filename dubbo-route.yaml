@@ -1,0 +1,60 @@
+resources:
+  - kind: Gateway
+    metadata:
+      name: test
+    spec:
+      listeners:
+        - name: dubbo-test
+          port: 6666
+          protocol: Dubbo
+        - name: http-test
+          port: 6868
+          protocol: HTTP
+
+  - kind: DubboRoute
+    spec:
+      parentRefs:
+        - kind: Gateway
+          name: test
+          sectionName: dubbo-test
+      rules:
+        - matches:
+            - type: Exact
+              service: org.apache.dubbo.sample.UserProvider
+              version: v1
+              method: getUser
+          backendRefs:
+            - kind: Backend
+              name: user-provider-v2
+
+  - kind: HTTPRoute
+    spec:
+      parentRefs:
+        - kind: Gateway
+          name: test
+          sectionName: http-test
+      hostnames:
+        - test.com
+      rules:
+        - matches:
+            - path:
+                type: Exact
+                value: /user
+          filters:
+            - type: TranscodeDubbo
+              transcodeDubbo:
+                service: org.apache.dubbo.sample.UserProvider
+                version: v1
+                method: getUser
+                signature: I
+          backendRefs:
+            - kind: Backend
+              name: user-provider-v2
+
+  - kind: Backend
+    metadata:
+      name: user-provider-v2
+    spec:
+      targets:
+        - address: 127.0.0.1
+          port: 20880

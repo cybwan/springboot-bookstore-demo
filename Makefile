@@ -1,7 +1,7 @@
 #!make
 
 CTR_REGISTRY = cybwan
-CTR_TAG      = latest
+CTR_TAG      = v2
 DOCKER_BUILDX_OUTPUT ?= type=registry
 DOCKER_BUILDX_PLATFORM ?= linux/amd64
 

@@ -10,7 +10,7 @@ data:
       .replaceMessage(
         (req) => new Message(
           req.head,
-          Hessian.encode(['hello'])
+          Hessian.encode([Hessian.decode(req.body)[5]]) 
         )
       )
       .encodeDubbo()
@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: cybwan/fgw-dubbo-demo
+          image: cybwan/fgw-dubbo-demo:v2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 20880

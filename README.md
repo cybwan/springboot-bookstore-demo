@@ -41,3 +41,15 @@ kubectl delete -f manifests/fgw-dubbo-demo-deploy-server.yaml
 kubectl delete -f manifests/fgw-dubbo-demo-svcs.yaml
 ```
 
+
+
+## DEMO v2
+
+```bash
+pipy dubbo-server.js --threads=max --reuse-port
+pipy dubbo-client.js --threads=max --reuse-port
+pipy --admin-port=6060 fgw/src/main.js --reuse-port --threads=max --args --config dubbo-route.yaml
+
+curl -H 'Host: test.com' -d @data.json http://localhost:6868/user -v
+```
+

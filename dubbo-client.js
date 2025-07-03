@@ -1,11 +1,4 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: fgw-dubbo-client
-data:
-  dubbo-client.js: |
-    var TARGET = 'localhost:6666'
+    var TARGET = 'localhost:6868'
     var DURATION = 10
     var RATE = 50000
     var CONCURRENCY = 8
@@ -82,49 +75,3 @@ data:
         ].join('\n')))
       })
     )
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: fgw-dubbo-client
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: fgw-dubbo-client
-      version: v1
-  template:
-    metadata:
-      labels:
-        app: fgw-dubbo-client
-        version: v1
-    spec:
-      containers:
-        - name: client
-          image: cybwan/fgw-dubbo-demo:v2
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          command: ['pipy']
-          args: [
-            "demo/dubbo-client.js",
-            "--threads=max",
-            "--reuse-port",
-          ]
-          #resources:
-          #  requests:
-          #    cpu: "1"
-          #    memory: "1Gi"
-          #  limits:
-          #    cpu: "1"
-          #    memory: "1Gi"
-          volumeMounts:
-            - mountPath: /demo
-              name: client
-      volumes:
-        - name: client
-          configMap:
-            name: fgw-dubbo-client
-            items:
-              - key: "dubbo-client.js"
-                path: "dubbo-client.js"
