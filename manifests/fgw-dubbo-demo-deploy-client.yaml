@@ -101,7 +101,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: cybwan/fgw-dubbo-demo:v2
+          image: cybwan/fgw-dubbo-demo
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

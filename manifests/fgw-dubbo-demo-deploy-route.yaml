@@ -84,7 +84,7 @@ spec:
     spec:
       containers:
         - name: fgw
-          image: cybwan/fgw-dubbo-demo:v2
+          image: cybwan/fgw-dubbo-demo
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6666
