@@ -16,7 +16,7 @@ resources:
       name: user-provider-v2
     spec:
       targets:
-        - address: 127.0.0.1
+        - address: fgw-dubbo-route
           port: 20880
 
   - kind: DubboRoute
