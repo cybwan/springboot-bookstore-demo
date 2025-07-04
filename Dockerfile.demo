@@ -3,3 +3,7 @@ FROM flomesh/pipy-nightly:latest
 WORKDIR /
 COPY ./fgw/src fgw/src
 COPY ./fgw/pjs fgw/pjs
+COPY ./dubbo-route.yaml dubbo-route.yaml
+COPY ./dubbo-server.js dubbo-server.js
+COPY ./data.json data.json
+COPY ./data.10k.json data.10k.json

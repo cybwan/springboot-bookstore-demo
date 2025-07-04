@@ -1,55 +1,34 @@
 ## 服务部署
 
 ```bash
-kubectl apply -f manifests/fgw-dubbo-demo-svcs.yaml
+kubectl create namespace flomesh-demo
+
+kubectl apply -n flomesh-demo -f manifests/fgw-dubbo-demo-svcs.yaml
 
 # 部署 server
-kubectl apply -f manifests/fgw-dubbo-demo-deploy-server.yaml
+kubectl apply -n flomesh-demo -f manifests/fgw-dubbo-demo-deploy-server.yaml
 
 # 部署 fgw
-export fgw_dubbo_server_ip="$(kubectl get pod --selector app=fgw-dubbo-server -o jsonpath='{.items[0]..status.podIP}')"
-echo fgw_dubbo_server_ip $fgw_dubbo_server_ip
-
-sed -i "s/127.0.0.1/$fgw_dubbo_server_ip/g" manifests/fgw-dubbo-demo-deploy-route.yaml
-
-kubectl apply -f manifests/fgw-dubbo-demo-deploy-route.yaml
-
-# 部署 client
-export fgw_dubbo_route_ip="$(kubectl get pod --selector app=fgw-dubbo-route -o jsonpath='{.items[0]..status.podIP}')"
-echo fgw_dubbo_route_ip $fgw_dubbo_route_ip
-
-sed -i "s/localhost/$fgw_dubbo_route_ip/g" manifests/fgw-dubbo-demo-deploy-client.yaml
-
-kubectl apply -f manifests/fgw-dubbo-demo-deploy-client.yaml
+kubectl apply -n flomesh-demo -f manifests/fgw-dubbo-demo-deploy-route.yaml
 ```
 
-## 延迟测试
+## 测试
 
 ```bash
-export fgw_dubbo_client_ip="$(kubectl get pod --selector app=fgw-dubbo-client -o jsonpath='{.items[0]..status.podIP}')"
-echo fgw_dubbo_client_ip $fgw_dubbo_client_ip
+export fgw_dubbo_server_pod_name="$(kubectl get pod -n flomesh-demo --selector app=fgw-dubbo-server -o jsonpath='{.items[0].metadata.name}')"
+echo fgw_dubbo_server_pod_name $fgw_dubbo_server_pod_name
 
-curl http://$fgw_dubbo_client_ip:8080/\?concurrency\=8\&duration\=10\&rate\=10000
+kubectl exec -it -n flomesh-demo $fgw_dubbo_server_pod_name -- curl -H 'Host: test.com' -d @data.json http://fgw-dubbo-route:6868/user
+
+#10k DTO
+kubectl exec -it -n flomesh-demo $fgw_dubbo_server_pod_name -- curl -H 'Host: test.com' -d @data.10k.json http://fgw-dubbo-route:6868/user
 ```
 
 ## 服务卸载
 
 ```bash
-kubectl delete -f manifests/fgw-dubbo-demo-deploy-client.yaml
 kubectl delete -f manifests/fgw-dubbo-demo-deploy-route.yaml
 kubectl delete -f manifests/fgw-dubbo-demo-deploy-server.yaml
 kubectl delete -f manifests/fgw-dubbo-demo-svcs.yaml
-```
-
-
-
-## DEMO v2
-
-```bash
-pipy dubbo-server.js --threads=max --reuse-port
-pipy dubbo-client.js --threads=max --reuse-port
-pipy --admin-port=6060 fgw/src/main.js --reuse-port --threads=max --args --config dubbo-route.yaml
-
-curl -H 'Host: test.com' -d @data.json http://localhost:6868/user -v
 ```
 

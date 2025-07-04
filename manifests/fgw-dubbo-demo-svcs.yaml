@@ -28,19 +28,9 @@ spec:
   ports:
     - port: 6666
       targetPort: 6666
+      name: dubbo2dubbo
+    - port: 6868
+      targetPort: 6868
+      name: http2dubbo
   selector:
     app: fgw-dubbo-route
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fgw-dubbo-client
-  labels:
-    app: fgw-dubbo-client
-    service: fgw-dubbo-client
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-  selector:
-    app: fgw-dubbo-client
